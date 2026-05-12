@@ -155,16 +155,17 @@ var LANG=(function(){
 })();
 
 // --- Tracking ---
-var TRACKING_URL='https://script.google.com/macros/s/AKfycbwFTK7k51MR3bwaXrM3xMwZUxLNk1go1rllnEJRc4hz3N25OvY2HgetZjpEpjswhu6d/exec'; // Vul hier je Apps Script deployment URL in
+var TRACKING_URL='https://script.google.com/macros/s/AKfycbx_UmVZsveDAb36OCvzoxM-KBGU2peH-nCeto3cRFbd6hUhZu2KjDGo0_ycJAqKo1s/exec'; // Vul hier je Apps Script deployment URL in
 var DOMAIN=params.base||window.location.origin;
 
 function track(event, step, choice, result){
   if(!TRACKING_URL) return;
   try{
-    fetch(TRACKING_URL,{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({event:event,step:step,choice:choice,result:result||'',lang:LANG,domain:DOMAIN})
+    // no-cors nodig omdat Apps Script geen CORS headers stuurt
+    var payload = JSON.stringify({event:event,step:step,choice:choice,result:result||'',lang:LANG,domain:DOMAIN});
+    fetch(TRACKING_URL + '?callback=x&event='+encodeURIComponent(event)+'&step='+encodeURIComponent(step)+'&choice='+encodeURIComponent(choice)+'&result='+encodeURIComponent(result||'')+'&lang='+encodeURIComponent(LANG)+'&domain='+encodeURIComponent(DOMAIN), {
+      method:'GET',
+      mode:'no-cors'
     });
   }catch(e){}
 }
