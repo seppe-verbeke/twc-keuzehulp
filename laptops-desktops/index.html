@@ -357,14 +357,11 @@ function renderStap2(stap) {
   prog(); showStep('ks2');
 }
 
-/* ── BASE URL (ontvangen van parent via postMessage) ── */
-var baseUrl = '';
-window.addEventListener('message', function(e) {
-  if (e.data && e.data.wscBase) {
-    baseUrl = e.data.wscBase.replace(/\/$/, '');
-  }
-  if (e.data && e.data.wscHeight) return; // ignore eigen berichten
-});
+/* ── BASE URL (uit ?base= URL parameter) ── */
+var baseUrl = (function() {
+  var m = window.location.search.match(/[?&]base=([^&]+)/);
+  return m ? decodeURIComponent(m[1]).replace(/\/$/, '') : '';
+})();
 
 /* ── RESULTAAT ── */
 function showResult(key) {
