@@ -79,345 +79,229 @@ body{padding:20px}
 (function(){
 'use strict';
 
-// --- URL params ---
-var params=(function(){
-  var m={};
-  window.location.search.replace(/[?&]([^=&]+)=([^&]*)/g,function(_,k,v){m[k]=decodeURIComponent(v);});
-  return m;
-})();
+var params=(function(){var m={};window.location.search.replace(/[?&]([^=&]+)=([^&]*)/g,function(_,k,v){m[k]=decodeURIComponent(v);});return m;})();
 var baseUrl=(params.base||'').replace(/\/$/,'');
-var LANG=params.lang||'nl';
-if(['nl','en','fr'].indexOf(LANG)===-1) LANG='nl';
 
-// --- i18n ---
+// Language detection: URL path > ?lang= param > browser language > default NL
+var LANG=(function(){
+  var path=params.base?new URL(params.base).pathname:window.location.pathname;
+  if(path.indexOf('/fr')>-1) return 'fr';
+  if(path.indexOf('/en')>-1) return 'en';
+  if(params.lang&&['nl','en','fr'].indexOf(params.lang)>-1) return params.lang;
+  var bl=(navigator.language||navigator.userLanguage||'nl').toLowerCase().substring(0,2);
+  if(bl==='fr') return 'fr';
+  if(bl==='en') return 'en';
+  return 'nl';
+})();
+
 var T={
-  nl:{
-    step:function(n,t){return 'Stap '+n+' van '+t;},
-    back:'← Terug',
-    result:'Jouw resultaat',
-    result_label:'Jouw aanbod',
-    view:'Bekijk aanbod →',
-    restart:'↺ Opnieuw beginnen',
-  },
-  en:{
-    step:function(n,t){return 'Step '+n+' of '+t;},
-    back:'← Back',
-    result:'Your result',
-    result_label:'Your selection',
-    view:'View selection →',
-    restart:'↺ Start over',
-  },
-  fr:{
-    step:function(n,t){return 'Étape '+n+' sur '+t;},
-    back:'← Retour',
-    result:'Votre résultat',
-    result_label:'Votre sélection',
-    view:'Voir la sélection →',
-    restart:'↺ Recommencer',
-  },
+  nl:{back:'← Terug',result:'Jouw resultaat',label:'Jouw aanbod',view:'Bekijk aanbod →',restart:'↺ Opnieuw beginnen'},
+  en:{back:'← Back',result:'Your result',label:'Your selection',view:'View selection →',restart:'↺ Start over'},
+  fr:{back:'← Retour',result:'Votre résultat',label:'Votre sélection',view:'Voir la sélection →',restart:'↺ Recommencer'},
 };
 var t=T[LANG];
 
-// --- Attribute IDs (Odoo) ---
-var ID={
-  os:{a:8,v:{wh:344,wp:337,mac:1126}},
-  proc:{a:166,v:{i3:339,i5:339,i7:784,i9:943,u5:937,u7:939,u9:1680,r5:365,r7:345,r9:1716,cel:364,m3:713,m4:893,m4p:1112,m4x:1113}},
-  ram:{a:167,v:{g4:361,g8:306,g16:340,g24:352,g32:802}},
-  gpu:{a:206,v:{r4050:1302,r4060:1521,r5060:1715,r5070:1931,r5080:1679}},
-  scr:{a:157,v:{s14:350,s15:1080,s156:338,s16:351,s173:1140}},
-  wcam:{a:207,v:{y:750}},
-  dtyp:{a:278,v:{oled:1580}},
-  rfr:{a:164,v:{h144:921,h240:930}},
-  npad:{a:204,v:{y:720}},
+// Odoo attribute IDs — verified against catalog export May 2026
+var A={os:8,proc:166,ram:167,gpu:206,scr:157,wcam:207,dtyp:278,rfr:164,npad:204};
+var V={
+  wh:344,wp:337,mac:1126,
+  i5:339,i7:784,i9:943,
+  u5:1544,u5s2:1699,u7:1545,u7s2:1504,u7s1:939,u9:1680,
+  c5:1696,c7:1698,
+  r5:365,r7:345,r9:1716,r9x:1880,rai9:1808,
+  m4_10:1535,m4_8:1532,m5_10:1785,
+  m5p15:1948,m5p18:1949,m5max:1945,
+  g8:306,g16:340,g24:352,g32:802,g64:803,
+  rtx5060:1715,rtx5060ti:2032,
+  rtx5070:1931,rtx5070ti:1810,
+  rtx5080:1679,rtx5090:1806,
+  rtxpro2k:1901,rtxpro4k:1898
 };
+
 function u(pairs){var qs=pairs.map(function(x){return'attrib='+x[0]+'-'+x[1];}).join('&');return(baseUrl||'')+'/shop'+(qs?'?'+qs:'');}
 function p(a,v){return[a,v];}
 
-// --- Results per language ---
-var RES_NL={
-  'home-win-light':{ti:'Laptop — Surfen & mail — Windows',rd:'Een instapmodel volstaat perfect voor dagelijks gebruik.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i3),p(ID.proc.a,ID.proc.v.r5),p(ID.ram.a,ID.ram.v.g8),p(ID.ram.a,ID.ram.v.g16),p(ID.wcam.a,ID.wcam.v.y)])},
-  'home-win-media':{ti:'Laptop — Films & series — Windows',rd:'Goed scherm staat centraal. OLED voor de beste beleving.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i3),p(ID.proc.a,ID.proc.v.r5),p(ID.ram.a,ID.ram.v.g8),p(ID.ram.a,ID.ram.v.g16),p(ID.dtyp.a,ID.dtyp.v.oled),p(ID.wcam.a,ID.wcam.v.y)])},
-  'home-win-office':{ti:'Laptop — Office & spreadsheets — Windows',rd:'16 GB RAM voor vlot multitasken.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i5),p(ID.proc.a,ID.proc.v.u5),p(ID.proc.a,ID.proc.v.r5),p(ID.ram.a,ID.ram.v.g16),p(ID.wcam.a,ID.wcam.v.y)])},
-  'home-mac':{ti:'MacBook Air — Dagelijks gebruik',rd:'MacBook Air M4 of M5 — de ideale allrounder voor dagelijks gebruik.',tip:'',url:u([p(ID.os.a,ID.os.v.mac),p(ID.proc.a,ID.proc.v.m4),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g24)])},
-  's-mid':{ti:'Laptop — Middelbare school',rd:'Licht en betaalbaar voor verslagen, presentaties en online lessen.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.cel),p(ID.proc.a,ID.proc.v.i3),p(ID.ram.a,ID.ram.v.g4),p(ID.ram.a,ID.ram.v.g8),p(ID.wcam.a,ID.wcam.v.y)])},
-  's-eco':{ti:'Laptop — Student economisch/sociaal',rd:'Office, onderzoek en verslagen. 16 GB RAM voor vlot multitasken.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i5),p(ID.proc.a,ID.proc.v.u5),p(ID.proc.a,ID.proc.v.r5),p(ID.ram.a,ID.ram.v.g16),p(ID.wcam.a,ID.wcam.v.y)])},
-  's-cre-win':{ti:'Laptop — Student creatief/grafisch — Windows',rd:'Beeldbewerking en design. Core i5/i7 met 16–32 GB RAM.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i5),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.u7),p(ID.proc.a,ID.proc.v.r7),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.wcam.a,ID.wcam.v.y)])},
-  's-cre-mac':{ti:'Laptop — Student creatief/grafisch — macOS',rd:'MacBook Air M4 of M5 — krachtig genoeg voor Photoshop en design.',tip:'',url:u([p(ID.os.a,ID.os.v.mac),p(ID.proc.a,ID.proc.v.m4),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g24)])},
-  's-tech':{ti:'Laptop — Student technisch/IT',rd:'AutoCAD, 3D en programmeren. Core Ultra 7 met dedicated GPU.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.u7),p(ID.proc.a,ID.proc.v.r7),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.gpu.a,ID.gpu.v.r4050),p(ID.gpu.a,ID.gpu.v.r4060),p(ID.wcam.a,ID.wcam.v.y)])},
-  'z-office':{ti:'Zakelijke laptop — E-mail & Office',rd:'Windows Pro voor BitLocker en Remote Desktop. Core i5/Ultra 5 met 16 GB.',tip:'💼 Windows Pro — vereist in de meeste bedrijven.',url:u([p(ID.os.a,ID.os.v.wp),p(ID.proc.a,ID.proc.v.i5),p(ID.proc.a,ID.proc.v.u5),p(ID.proc.a,ID.proc.v.r5),p(ID.ram.a,ID.ram.v.g16),p(ID.wcam.a,ID.wcam.v.y)])},
-  'z-photo':{ti:'Zakelijke laptop — Digitaal ontwerp/foto',rd:'Photoshop en Illustrator. Core i5/i7 met 16–32 GB RAM op Windows Pro.',tip:'💼 Windows Pro — vereist voor bedrijfsomgevingen.',url:u([p(ID.os.a,ID.os.v.wp),p(ID.proc.a,ID.proc.v.i5),p(ID.proc.a,ID.proc.v.u7),p(ID.proc.a,ID.proc.v.r7),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.wcam.a,ID.wcam.v.y)])},
-  'z-video':{ti:'Zakelijke laptop — Videobewerking',rd:'Premiere Pro en After Effects. Core Ultra 7 met GPU en 16–32 GB RAM.',tip:'💼 Windows Pro — vereist voor bedrijfsomgevingen.',url:u([p(ID.os.a,ID.os.v.wp),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.u7),p(ID.proc.a,ID.proc.v.r7),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.gpu.a,ID.gpu.v.r4050),p(ID.gpu.a,ID.gpu.v.r4060),p(ID.wcam.a,ID.wcam.v.y)])},
-  'z-3d':{ti:'Zakelijke laptop — 3D/AutoCAD',rd:'AutoCAD en Solidworks. Core Ultra 7/9 met dedicated GPU verplicht.',tip:'💼 Windows Pro — vereist voor bedrijfsomgevingen.',url:u([p(ID.os.a,ID.os.v.wp),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.i9),p(ID.proc.a,ID.proc.v.u7),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.gpu.a,ID.gpu.v.r4050),p(ID.gpu.a,ID.gpu.v.r4060),p(ID.wcam.a,ID.wcam.v.y)])},
-  'c-photo-win':{ti:'Laptop — Fotobewerking — Windows',rd:'Photoshop, Lightroom en Canva. Core i5/Ultra 5 met 16–32 GB RAM.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i5),p(ID.proc.a,ID.proc.v.u5),p(ID.proc.a,ID.proc.v.r5),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.wcam.a,ID.wcam.v.y)])},
-  'c-photo-mac':{ti:'Laptop — Fotobewerking — macOS',rd:'MacBook Air M4 of M5 — krachtig genoeg voor Photoshop en Lightroom.',tip:'',url:u([p(ID.os.a,ID.os.v.mac),p(ID.proc.a,ID.proc.v.m4),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g24)])},
-  'c-video-win':{ti:'Laptop — Foto- & videobewerking — Windows',rd:'Premiere Pro en After Effects. Core Ultra 7 met dedicated GPU én 16–32 GB RAM.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.u7),p(ID.proc.a,ID.proc.v.r7),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.gpu.a,ID.gpu.v.r4050),p(ID.gpu.a,ID.gpu.v.r4060),p(ID.wcam.a,ID.wcam.v.y)])},
-  'c-video-mac':{ti:'Laptop — Foto- & videobewerking — macOS',rd:'MacBook Pro M5 Pro voor vlotte videobewerking in Premiere Pro en Final Cut.',tip:'',url:u([p(ID.os.a,ID.os.v.mac),p(ID.proc.a,ID.proc.v.m4p),p(ID.ram.a,ID.ram.v.g24),p(ID.ram.a,ID.ram.v.g32)])},
-  'c-3d-win':{ti:'Laptop — 2D/3D ontwerp — Windows',rd:'AutoCAD en Blender. Core Ultra 7 met dedicated GPU vereist.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.i9),p(ID.proc.a,ID.proc.v.u7),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.gpu.a,ID.gpu.v.r4050),p(ID.gpu.a,ID.gpu.v.r4060),p(ID.wcam.a,ID.wcam.v.y)])},
-  'g-light-mobile':{ti:'Gaming laptop — Casual — Compact formaat',rd:'RTX 5060 in 14–15 inch. Licht genoeg om mee te nemen.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i5),p(ID.proc.a,ID.proc.v.r5),p(ID.ram.a,ID.ram.v.g16),p(ID.gpu.a,ID.gpu.v.r5060),p(ID.scr.a,ID.scr.v.s14),p(ID.scr.a,ID.scr.v.s15),p(ID.rfr.a,ID.rfr.v.h144)])},
-  'g-light-fixed':{ti:'Gaming laptop — Casual — Groot scherm',rd:'RTX 5060 in 16–17 inch met numpad voor thuis.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i5),p(ID.proc.a,ID.proc.v.r5),p(ID.ram.a,ID.ram.v.g16),p(ID.gpu.a,ID.gpu.v.r5060),p(ID.scr.a,ID.scr.v.s16),p(ID.scr.a,ID.scr.v.s173),p(ID.rfr.a,ID.rfr.v.h144),p(ID.npad.a,ID.npad.v.y)])},
-  'g-heavy-mobile':{ti:'Gaming laptop — Zwaar — Compact formaat',rd:'RTX 5070/5080 in 16 inch. Krachtig en nog meebaar.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.i9),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.gpu.a,ID.gpu.v.r5070),p(ID.gpu.a,ID.gpu.v.r5080),p(ID.scr.a,ID.scr.v.s16),p(ID.rfr.a,ID.rfr.v.h240)])},
-  'g-heavy-fixed':{ti:'Gaming laptop — Zwaar — Groot scherm',rd:'RTX 5070/5080 in 17 inch. Maximale prestaties voor thuis.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.i9),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.gpu.a,ID.gpu.v.r5070),p(ID.gpu.a,ID.gpu.v.r5080),p(ID.scr.a,ID.scr.v.s173),p(ID.rfr.a,ID.rfr.v.h240),p(ID.npad.a,ID.npad.v.y)])},
-  'dt-light':{ti:'Desktop — Thuisgebruik — Windows',rd:'Surfen, films en mail. Een compacte Lenovo ThinkCentre volstaat.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i3),p(ID.proc.a,ID.proc.v.i5),p(ID.ram.a,ID.ram.v.g8),p(ID.ram.a,ID.ram.v.g16)])},
-  'dt-office':{ti:'Desktop — Kantoor & zwaarder gebruik — Windows',rd:'Office, beeldbewerking en 3D. Core i7 met 16 GB RAM.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.u7),p(ID.ram.a,ID.ram.v.g16)])},
+// Processor groups
+function U5(){return[p(A.proc,V.u5),p(A.proc,V.u5s2),p(A.proc,V.i5),p(A.proc,V.c5)];}
+function U7(){return[p(A.proc,V.u7),p(A.proc,V.u7s2),p(A.proc,V.u7s1),p(A.proc,V.i7),p(A.proc,V.c7)];}
+function U9(){return[p(A.proc,V.u9)];}
+function MacAir(){return[p(A.proc,V.m4_10),p(A.proc,V.m4_8),p(A.proc,V.m5_10)];}
+function MacPro(){return[p(A.proc,V.m5p15),p(A.proc,V.m5p18),p(A.proc,V.m5max)];}
+function AllNvidia(){return[p(A.gpu,V.rtx5060),p(A.gpu,V.rtx5060ti),p(A.gpu,V.rtx5070),p(A.gpu,V.rtx5070ti),p(A.gpu,V.rtx5080),p(A.gpu,V.rtx5090)];}
+function HeavyGpu(){return[p(A.gpu,V.rtx5070),p(A.gpu,V.rtx5070ti),p(A.gpu,V.rtx5080),p(A.gpu,V.rtx5090)];}
+function ZakGpu(){return[p(A.gpu,V.rtxpro2k),p(A.gpu,V.rtxpro4k),p(A.gpu,V.rtx5070)];}
+
+// Results per language
+var RES={
+nl:{
+  'dt-gaming':{ti:'Gaming desktop — Windows',rd:'High-end gaming tower met RTX 5060 of hoger. Lenovo Legion of MSI voor de beste gamingprestaties.',tip:'',url:u([p(A.os,V.wh)].concat(AllNvidia()))},
+  'dt-office':{ti:'Desktop — Zakelijk gebruik — Windows Pro',rd:'Lenovo ThinkCentre voor kantoor en Office. Beveiligd met BitLocker via Windows Pro.',tip:'💼 Windows Pro — vereist in de meeste bedrijven.',url:u([p(A.os,V.wp)])},
+  'mac-air':{ti:'MacBook Air — Dagelijks gebruik',rd:'MacBook Air M4 of M5 — licht, stil en krachtig genoeg voor alles wat je dagelijks doet. Inclusief lichte fotobewerking.',tip:'',url:u([p(A.os,V.mac)].concat(MacAir()).concat([p(A.ram,V.g16),p(A.ram,V.g24)]))},
+  'mac-pro':{ti:'MacBook Pro — Zware taken',rd:'MacBook Pro M5 Pro of M5 Max voor professionele videobewerking, 3D, development en grote bestanden.',tip:'',url:u([p(A.os,V.mac)].concat(MacPro()))},
+  'priv-office':{ti:'Laptop — Dagelijks gebruik & Office — Windows',rd:'Samsung Galaxy Book met Intel Core Ultra 5 of Ultra 7, 16 GB RAM. Licht en snel voor surfen, mail, Office en films.',tip:'',url:u([p(A.os,V.wh)].concat(U5()).concat(U7()).concat([p(A.ram,V.g16)]))},
+  'priv-school':{ti:'Laptop — School & studie — Windows',rd:'Lenovo ThinkBook of HP ProBook met Ultra 5 of i5, 16 GB. Voor verslagen, presentaties, Office en onderzoek.',tip:'',url:u([p(A.os,V.wp)].concat(U5()).concat([p(A.proc,V.i5)]).concat([p(A.ram,V.g16)]))},
+  'priv-photo':{ti:'Laptop — Fotobewerking — Windows',rd:'Samsung Galaxy Book Pro met Ultra 5 of Ultra 7, 16–32 GB. Voor Photoshop, Lightroom en Canva.',tip:'',url:u([p(A.os,V.wh)].concat(U5()).concat(U7()).concat([p(A.ram,V.g16),p(A.ram,V.g32)]))},
+  'priv-video':{ti:'Laptop — Foto- & videobewerking — Windows',rd:'MSI laptop met RTX GPU voor Premiere Pro en After Effects. Voldoende kracht voor zware bewerkingen.',tip:'',url:u([p(A.os,V.wh)].concat(AllNvidia()).concat([p(A.ram,V.g16),p(A.ram,V.g32)]))},
+  'priv-gaming-casual':{ti:'Gaming laptop — Casual & e-sports',rd:'RTX 5060 voor Fortnite, CoD en Minecraft op full HD met hoge framerates.',tip:'',url:u([p(A.os,V.wh),p(A.gpu,V.rtx5060),p(A.gpu,V.rtx5060ti)])},
+  'priv-gaming-heavy':{ti:'Gaming laptop — Zwaar & AAA',rd:'RTX 5070 Ti, 5080 of 5090 voor Flight Simulator, Elden Ring en 4K gaming.',tip:'',url:u([p(A.os,V.wh)].concat(HeavyGpu()))},
+  'zak-office':{ti:'Zakelijke laptop — Mail & Office',rd:'Lenovo ThinkBook, HP ProBook of EliteBook. Ultra 5/i5, 16 GB, Windows Pro met BitLocker en Remote Desktop.',tip:'💼 Windows Pro — vereist in de meeste bedrijven.',url:u([p(A.os,V.wp)].concat(U5()).concat([p(A.proc,V.i5)]).concat([p(A.ram,V.g16)]))},
+  'zak-photo':{ti:'Zakelijke laptop — Digitaal ontwerp & foto',rd:'HP EliteBook of Lenovo ThinkPad met Ultra 7, 16–32 GB. Voor Photoshop, Illustrator en InDesign.',tip:'💼 Windows Pro — vereist voor bedrijfsomgevingen.',url:u([p(A.os,V.wp)].concat(U7()).concat([p(A.ram,V.g16),p(A.ram,V.g32)]))},
+  'zak-video-3d':{ti:'Zakelijke laptop — Video & 3D',rd:'Lenovo ThinkPad P-serie met RTX PRO GPU. Voor Premiere Pro, AutoCAD en Solidworks.',tip:'💼 Windows Pro — vereist voor bedrijfsomgevingen.',url:u([p(A.os,V.wp)].concat(ZakGpu()))},
+},
+en:{
+  'dt-gaming':{ti:'Gaming desktop — Windows',rd:'High-end gaming tower with RTX 5060 or higher. Lenovo Legion or MSI for the best gaming performance.',tip:'',url:u([p(A.os,V.wh)].concat(AllNvidia()))},
+  'dt-office':{ti:'Desktop — Business use — Windows Pro',rd:'Lenovo ThinkCentre for office and Office tasks. Secured with BitLocker via Windows Pro.',tip:'💼 Windows Pro — required in most business environments.',url:u([p(A.os,V.wp)])},
+  'mac-air':{ti:'MacBook Air — Everyday use',rd:'MacBook Air M4 or M5 — light, silent and powerful enough for everything you do daily. Including light photo editing.',tip:'',url:u([p(A.os,V.mac)].concat(MacAir()).concat([p(A.ram,V.g16),p(A.ram,V.g24)]))},
+  'mac-pro':{ti:'MacBook Pro — Heavy tasks',rd:'MacBook Pro M5 Pro or M5 Max for professional video editing, 3D, development and large files.',tip:'',url:u([p(A.os,V.mac)].concat(MacPro()))},
+  'priv-office':{ti:'Laptop — Everyday use & Office — Windows',rd:'Samsung Galaxy Book with Intel Core Ultra 5 or Ultra 7, 16 GB RAM. Light and fast for browsing, email, Office and movies.',tip:'',url:u([p(A.os,V.wh)].concat(U5()).concat(U7()).concat([p(A.ram,V.g16)]))},
+  'priv-school':{ti:'Laptop — School & studies — Windows',rd:'Lenovo ThinkBook or HP ProBook with Ultra 5 or i5, 16 GB. For essays, presentations, Office and research.',tip:'',url:u([p(A.os,V.wp)].concat(U5()).concat([p(A.proc,V.i5)]).concat([p(A.ram,V.g16)]))},
+  'priv-photo':{ti:'Laptop — Photo editing — Windows',rd:'Samsung Galaxy Book Pro with Ultra 5 or Ultra 7, 16–32 GB. For Photoshop, Lightroom and Canva.',tip:'',url:u([p(A.os,V.wh)].concat(U5()).concat(U7()).concat([p(A.ram,V.g16),p(A.ram,V.g32)]))},
+  'priv-video':{ti:'Laptop — Photo & video editing — Windows',rd:'MSI laptop with RTX GPU for Premiere Pro and After Effects. Enough power for heavy editing.',tip:'',url:u([p(A.os,V.wh)].concat(AllNvidia()).concat([p(A.ram,V.g16),p(A.ram,V.g32)]))},
+  'priv-gaming-casual':{ti:'Gaming laptop — Casual & e-sports',rd:'RTX 5060 for Fortnite, CoD and Minecraft at full HD with high framerates.',tip:'',url:u([p(A.os,V.wh),p(A.gpu,V.rtx5060),p(A.gpu,V.rtx5060ti)])},
+  'priv-gaming-heavy':{ti:'Gaming laptop — Heavy & AAA',rd:'RTX 5070 Ti, 5080 or 5090 for Flight Simulator, Elden Ring and 4K gaming.',tip:'',url:u([p(A.os,V.wh)].concat(HeavyGpu()))},
+  'zak-office':{ti:'Business laptop — Email & Office',rd:'Lenovo ThinkBook, HP ProBook or EliteBook. Ultra 5/i5, 16 GB, Windows Pro with BitLocker and Remote Desktop.',tip:'💼 Windows Pro — required in most business environments.',url:u([p(A.os,V.wp)].concat(U5()).concat([p(A.proc,V.i5)]).concat([p(A.ram,V.g16)]))},
+  'zak-photo':{ti:'Business laptop — Digital design & photo',rd:'HP EliteBook or Lenovo ThinkPad with Ultra 7, 16–32 GB. For Photoshop, Illustrator and InDesign.',tip:'💼 Windows Pro — required for business environments.',url:u([p(A.os,V.wp)].concat(U7()).concat([p(A.ram,V.g16),p(A.ram,V.g32)]))},
+  'zak-video-3d':{ti:'Business laptop — Video & 3D',rd:'Lenovo ThinkPad P-series with RTX PRO GPU. For Premiere Pro, AutoCAD and Solidworks.',tip:'💼 Windows Pro — required for business environments.',url:u([p(A.os,V.wp)].concat(ZakGpu()))},
+},
+fr:{
+  'dt-gaming':{ti:'Desktop gaming — Windows',rd:'Tour gaming avec RTX 5060 ou supérieur. Lenovo Legion ou MSI pour les meilleures performances gaming.',tip:'',url:u([p(A.os,V.wh)].concat(AllNvidia()))},
+  'dt-office':{ti:'Desktop — Usage professionnel — Windows Pro',rd:'Lenovo ThinkCentre pour bureau et Office. Sécurisé avec BitLocker via Windows Pro.',tip:'💼 Windows Pro — requis dans la plupart des entreprises.',url:u([p(A.os,V.wp)])},
+  'mac-air':{ti:'MacBook Air — Usage quotidien',rd:'MacBook Air M4 ou M5 — léger, silencieux et assez puissant pour tout ce que vous faites au quotidien. Y compris la retouche photo légère.',tip:'',url:u([p(A.os,V.mac)].concat(MacAir()).concat([p(A.ram,V.g16),p(A.ram,V.g24)]))},
+  'mac-pro':{ti:'MacBook Pro — Tâches intensives',rd:'MacBook Pro M5 Pro ou M5 Max pour le montage vidéo professionnel, la 3D, le développement et les grands fichiers.',tip:'',url:u([p(A.os,V.mac)].concat(MacPro()))},
+  'priv-office':{ti:'Laptop — Usage quotidien & Office — Windows',rd:'Samsung Galaxy Book avec Intel Core Ultra 5 ou Ultra 7, 16 Go de RAM. Léger et rapide pour la navigation, les emails, Office et les films.',tip:'',url:u([p(A.os,V.wh)].concat(U5()).concat(U7()).concat([p(A.ram,V.g16)]))},
+  'priv-school':{ti:'Laptop — École & études — Windows',rd:'Lenovo ThinkBook ou HP ProBook avec Ultra 5 ou i5, 16 Go. Pour les travaux, présentations, Office et la recherche.',tip:'',url:u([p(A.os,V.wp)].concat(U5()).concat([p(A.proc,V.i5)]).concat([p(A.ram,V.g16)]))},
+  'priv-photo':{ti:'Laptop — Retouche photo — Windows',rd:'Samsung Galaxy Book Pro avec Ultra 5 ou Ultra 7, 16–32 Go. Pour Photoshop, Lightroom et Canva.',tip:'',url:u([p(A.os,V.wh)].concat(U5()).concat(U7()).concat([p(A.ram,V.g16),p(A.ram,V.g32)]))},
+  'priv-video':{ti:'Laptop — Retouche photo & vidéo — Windows',rd:'Laptop MSI avec GPU RTX pour Premiere Pro et After Effects. Assez puissant pour les retouches intensives.',tip:'',url:u([p(A.os,V.wh)].concat(AllNvidia()).concat([p(A.ram,V.g16),p(A.ram,V.g32)]))},
+  'priv-gaming-casual':{ti:'Laptop gaming — Casual & e-sports',rd:'RTX 5060 pour Fortnite, CoD et Minecraft en full HD avec de hauts framerates.',tip:'',url:u([p(A.os,V.wh),p(A.gpu,V.rtx5060),p(A.gpu,V.rtx5060ti)])},
+  'priv-gaming-heavy':{ti:'Laptop gaming — Jeux lourds & AAA',rd:'RTX 5070 Ti, 5080 ou 5090 pour Flight Simulator, Elden Ring et le gaming 4K.',tip:'',url:u([p(A.os,V.wh)].concat(HeavyGpu()))},
+  'zak-office':{ti:'Laptop professionnel — Email & Office',rd:'Lenovo ThinkBook, HP ProBook ou EliteBook. Ultra 5/i5, 16 Go, Windows Pro avec BitLocker et Bureau à distance.',tip:'💼 Windows Pro — requis dans la plupart des entreprises.',url:u([p(A.os,V.wp)].concat(U5()).concat([p(A.proc,V.i5)]).concat([p(A.ram,V.g16)]))},
+  'zak-photo':{ti:'Laptop professionnel — Design numérique & photo',rd:'HP EliteBook ou Lenovo ThinkPad avec Ultra 7, 16–32 Go. Pour Photoshop, Illustrator et InDesign.',tip:'💼 Windows Pro — requis pour les environnements professionnels.',url:u([p(A.os,V.wp)].concat(U7()).concat([p(A.ram,V.g16),p(A.ram,V.g32)]))},
+  'zak-video-3d':{ti:'Laptop professionnel — Vidéo & 3D',rd:'Lenovo ThinkPad série P avec GPU RTX PRO. Pour Premiere Pro, AutoCAD et Solidworks.',tip:'💼 Windows Pro — requis pour les environnements professionnels.',url:u([p(A.os,V.wp)].concat(ZakGpu()))},
+}
 };
 
-var RES_EN={
-  'home-win-light':{ti:'Laptop — Browsing & email — Windows',rd:'An entry-level model is perfect for everyday use.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i3),p(ID.proc.a,ID.proc.v.r5),p(ID.ram.a,ID.ram.v.g8),p(ID.ram.a,ID.ram.v.g16),p(ID.wcam.a,ID.wcam.v.y)])},
-  'home-win-media':{ti:'Laptop — Movies & streaming — Windows',rd:'Display quality is key. OLED for the best experience.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i3),p(ID.proc.a,ID.proc.v.r5),p(ID.ram.a,ID.ram.v.g8),p(ID.ram.a,ID.ram.v.g16),p(ID.dtyp.a,ID.dtyp.v.oled),p(ID.wcam.a,ID.wcam.v.y)])},
-  'home-win-office':{ti:'Laptop — Office & spreadsheets — Windows',rd:'16 GB RAM for smooth multitasking.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i5),p(ID.proc.a,ID.proc.v.u5),p(ID.proc.a,ID.proc.v.r5),p(ID.ram.a,ID.ram.v.g16),p(ID.wcam.a,ID.wcam.v.y)])},
-  'home-mac':{ti:'MacBook Air — Everyday use',rd:'MacBook Air M4 or M5 — the ideal all-rounder for daily use.',tip:'',url:u([p(ID.os.a,ID.os.v.mac),p(ID.proc.a,ID.proc.v.m4),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g24)])},
-  's-mid':{ti:'Laptop — Secondary school',rd:'Light and affordable for essays, presentations and online lessons.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.cel),p(ID.proc.a,ID.proc.v.i3),p(ID.ram.a,ID.ram.v.g4),p(ID.ram.a,ID.ram.v.g8),p(ID.wcam.a,ID.wcam.v.y)])},
-  's-eco':{ti:'Laptop — Student: economics/social sciences',rd:'Office, research and essays. 16 GB RAM for smooth multitasking.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i5),p(ID.proc.a,ID.proc.v.u5),p(ID.proc.a,ID.proc.v.r5),p(ID.ram.a,ID.ram.v.g16),p(ID.wcam.a,ID.wcam.v.y)])},
-  's-cre-win':{ti:'Laptop — Student: creative/graphic design — Windows',rd:'Image editing and design. Core i5/i7 with 16–32 GB RAM.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i5),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.u7),p(ID.proc.a,ID.proc.v.r7),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.wcam.a,ID.wcam.v.y)])},
-  's-cre-mac':{ti:'Laptop — Student: creative/graphic design — macOS',rd:'MacBook Air M4 or M5 — powerful enough for Photoshop and design.',tip:'',url:u([p(ID.os.a,ID.os.v.mac),p(ID.proc.a,ID.proc.v.m4),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g24)])},
-  's-tech':{ti:'Laptop — Student: technical/IT',rd:'AutoCAD, 3D and coding. Core Ultra 7 with dedicated GPU.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.u7),p(ID.proc.a,ID.proc.v.r7),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.gpu.a,ID.gpu.v.r4050),p(ID.gpu.a,ID.gpu.v.r4060),p(ID.wcam.a,ID.wcam.v.y)])},
-  'z-office':{ti:'Business laptop — Email & Office',rd:'Windows Pro for BitLocker and Remote Desktop. Core i5/Ultra 5 with 16 GB.',tip:'💼 Windows Pro — required in most business environments.',url:u([p(ID.os.a,ID.os.v.wp),p(ID.proc.a,ID.proc.v.i5),p(ID.proc.a,ID.proc.v.u5),p(ID.proc.a,ID.proc.v.r5),p(ID.ram.a,ID.ram.v.g16),p(ID.wcam.a,ID.wcam.v.y)])},
-  'z-photo':{ti:'Business laptop — Digital design/photo',rd:'Photoshop and Illustrator. Core i5/i7 with 16–32 GB RAM on Windows Pro.',tip:'💼 Windows Pro — required for business environments.',url:u([p(ID.os.a,ID.os.v.wp),p(ID.proc.a,ID.proc.v.i5),p(ID.proc.a,ID.proc.v.u7),p(ID.proc.a,ID.proc.v.r7),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.wcam.a,ID.wcam.v.y)])},
-  'z-video':{ti:'Business laptop — Video editing',rd:'Premiere Pro and After Effects. Core Ultra 7 with GPU and 16–32 GB RAM.',tip:'💼 Windows Pro — required for business environments.',url:u([p(ID.os.a,ID.os.v.wp),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.u7),p(ID.proc.a,ID.proc.v.r7),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.gpu.a,ID.gpu.v.r4050),p(ID.gpu.a,ID.gpu.v.r4060),p(ID.wcam.a,ID.wcam.v.y)])},
-  'z-3d':{ti:'Business laptop — 3D/AutoCAD',rd:'AutoCAD and Solidworks. Core Ultra 7/9 with dedicated GPU required.',tip:'💼 Windows Pro — required for business environments.',url:u([p(ID.os.a,ID.os.v.wp),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.i9),p(ID.proc.a,ID.proc.v.u7),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.gpu.a,ID.gpu.v.r4050),p(ID.gpu.a,ID.gpu.v.r4060),p(ID.wcam.a,ID.wcam.v.y)])},
-  'c-photo-win':{ti:'Laptop — Photo editing — Windows',rd:'Photoshop, Lightroom and Canva. Core i5/Ultra 5 with 16–32 GB RAM.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i5),p(ID.proc.a,ID.proc.v.u5),p(ID.proc.a,ID.proc.v.r5),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.wcam.a,ID.wcam.v.y)])},
-  'c-photo-mac':{ti:'Laptop — Photo editing — macOS',rd:'MacBook Air M4 or M5 — powerful enough for Photoshop and Lightroom.',tip:'',url:u([p(ID.os.a,ID.os.v.mac),p(ID.proc.a,ID.proc.v.m4),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g24)])},
-  'c-video-win':{ti:'Laptop — Photo & video editing — Windows',rd:'Premiere Pro and After Effects. Core Ultra 7 with dedicated GPU and 16–32 GB RAM.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.u7),p(ID.proc.a,ID.proc.v.r7),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.gpu.a,ID.gpu.v.r4050),p(ID.gpu.a,ID.gpu.v.r4060),p(ID.wcam.a,ID.wcam.v.y)])},
-  'c-video-mac':{ti:'Laptop — Photo & video editing — macOS',rd:'MacBook Pro M5 Pro for smooth video editing in Premiere Pro and Final Cut.',tip:'',url:u([p(ID.os.a,ID.os.v.mac),p(ID.proc.a,ID.proc.v.m4p),p(ID.ram.a,ID.ram.v.g24),p(ID.ram.a,ID.ram.v.g32)])},
-  'c-3d-win':{ti:'Laptop — 2D/3D design — Windows',rd:'AutoCAD and Blender. Core Ultra 7 with dedicated GPU required.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.i9),p(ID.proc.a,ID.proc.v.u7),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.gpu.a,ID.gpu.v.r4050),p(ID.gpu.a,ID.gpu.v.r4060),p(ID.wcam.a,ID.wcam.v.y)])},
-  'g-light-mobile':{ti:'Gaming laptop — Casual — Compact',rd:'RTX 5060 in 14–15 inch. Light enough to take anywhere.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i5),p(ID.proc.a,ID.proc.v.r5),p(ID.ram.a,ID.ram.v.g16),p(ID.gpu.a,ID.gpu.v.r5060),p(ID.scr.a,ID.scr.v.s14),p(ID.scr.a,ID.scr.v.s15),p(ID.rfr.a,ID.rfr.v.h144)])},
-  'g-light-fixed':{ti:'Gaming laptop — Casual — Large screen',rd:'RTX 5060 in 16–17 inch with numpad for home use.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i5),p(ID.proc.a,ID.proc.v.r5),p(ID.ram.a,ID.ram.v.g16),p(ID.gpu.a,ID.gpu.v.r5060),p(ID.scr.a,ID.scr.v.s16),p(ID.scr.a,ID.scr.v.s173),p(ID.rfr.a,ID.rfr.v.h144),p(ID.npad.a,ID.npad.v.y)])},
-  'g-heavy-mobile':{ti:'Gaming laptop — Heavy — Compact',rd:'RTX 5070/5080 in 16 inch. Powerful and still portable.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.i9),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.gpu.a,ID.gpu.v.r5070),p(ID.gpu.a,ID.gpu.v.r5080),p(ID.scr.a,ID.scr.v.s16),p(ID.rfr.a,ID.rfr.v.h240)])},
-  'g-heavy-fixed':{ti:'Gaming laptop — Heavy — Large screen',rd:'RTX 5070/5080 in 17 inch. Maximum performance at home.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.i9),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.gpu.a,ID.gpu.v.r5070),p(ID.gpu.a,ID.gpu.v.r5080),p(ID.scr.a,ID.scr.v.s173),p(ID.rfr.a,ID.rfr.v.h240),p(ID.npad.a,ID.npad.v.y)])},
-  'dt-light':{ti:'Desktop — Home use — Windows',rd:'Browsing, movies and email. A compact Lenovo ThinkCentre is perfect.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i3),p(ID.proc.a,ID.proc.v.i5),p(ID.ram.a,ID.ram.v.g8),p(ID.ram.a,ID.ram.v.g16)])},
-  'dt-office':{ti:'Desktop — Office & heavier use — Windows',rd:'Office, image editing and 3D. Core i7 with 16 GB RAM.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.u7),p(ID.ram.a,ID.ram.v.g16)])},
-};
-
-var RES_FR={
-  'home-win-light':{ti:'Laptop — Navigation & email — Windows',rd:'Un modèle d\'entrée de gamme suffit parfaitement pour un usage quotidien.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i3),p(ID.proc.a,ID.proc.v.r5),p(ID.ram.a,ID.ram.v.g8),p(ID.ram.a,ID.ram.v.g16),p(ID.wcam.a,ID.wcam.v.y)])},
-  'home-win-media':{ti:'Laptop — Films & streaming — Windows',rd:'La qualité d\'écran est primordiale. OLED pour la meilleure expérience.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i3),p(ID.proc.a,ID.proc.v.r5),p(ID.ram.a,ID.ram.v.g8),p(ID.ram.a,ID.ram.v.g16),p(ID.dtyp.a,ID.dtyp.v.oled),p(ID.wcam.a,ID.wcam.v.y)])},
-  'home-win-office':{ti:'Laptop — Office & tableurs — Windows',rd:'16 Go de RAM pour un multitâche fluide.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i5),p(ID.proc.a,ID.proc.v.u5),p(ID.proc.a,ID.proc.v.r5),p(ID.ram.a,ID.ram.v.g16),p(ID.wcam.a,ID.wcam.v.y)])},
-  'home-mac':{ti:'MacBook Air — Usage quotidien',rd:'MacBook Air M4 ou M5 — la solution polyvalente idéale pour un usage quotidien.',tip:'',url:u([p(ID.os.a,ID.os.v.mac),p(ID.proc.a,ID.proc.v.m4),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g24)])},
-  's-mid':{ti:'Laptop — Enseignement secondaire',rd:'Léger et abordable pour les travaux, présentations et cours en ligne.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.cel),p(ID.proc.a,ID.proc.v.i3),p(ID.ram.a,ID.ram.v.g4),p(ID.ram.a,ID.ram.v.g8),p(ID.wcam.a,ID.wcam.v.y)])},
-  's-eco':{ti:'Laptop — Étudiant: économie/sciences sociales',rd:'Office, recherche et travaux. 16 Go de RAM pour un multitâche fluide.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i5),p(ID.proc.a,ID.proc.v.u5),p(ID.proc.a,ID.proc.v.r5),p(ID.ram.a,ID.ram.v.g16),p(ID.wcam.a,ID.wcam.v.y)])},
-  's-cre-win':{ti:'Laptop — Étudiant: créatif/graphisme — Windows',rd:'Retouche photo et design. Core i5/i7 avec 16–32 Go de RAM.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i5),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.u7),p(ID.proc.a,ID.proc.v.r7),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.wcam.a,ID.wcam.v.y)])},
-  's-cre-mac':{ti:'Laptop — Étudiant: créatif/graphisme — macOS',rd:'MacBook Air M4 ou M5 — suffisamment puissant pour Photoshop et le design.',tip:'',url:u([p(ID.os.a,ID.os.v.mac),p(ID.proc.a,ID.proc.v.m4),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g24)])},
-  's-tech':{ti:'Laptop — Étudiant: technique/IT',rd:'AutoCAD, 3D et programmation. Core Ultra 7 avec GPU dédié.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.u7),p(ID.proc.a,ID.proc.v.r7),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.gpu.a,ID.gpu.v.r4050),p(ID.gpu.a,ID.gpu.v.r4060),p(ID.wcam.a,ID.wcam.v.y)])},
-  'z-office':{ti:'Laptop professionnel — Email & Office',rd:'Windows Pro pour BitLocker et Bureau à distance. Core i5/Ultra 5 avec 16 Go.',tip:'💼 Windows Pro — requis dans la plupart des entreprises.',url:u([p(ID.os.a,ID.os.v.wp),p(ID.proc.a,ID.proc.v.i5),p(ID.proc.a,ID.proc.v.u5),p(ID.proc.a,ID.proc.v.r5),p(ID.ram.a,ID.ram.v.g16),p(ID.wcam.a,ID.wcam.v.y)])},
-  'z-photo':{ti:'Laptop professionnel — Design numérique/photo',rd:'Photoshop et Illustrator. Core i5/i7 avec 16–32 Go de RAM sous Windows Pro.',tip:'💼 Windows Pro — requis pour les environnements professionnels.',url:u([p(ID.os.a,ID.os.v.wp),p(ID.proc.a,ID.proc.v.i5),p(ID.proc.a,ID.proc.v.u7),p(ID.proc.a,ID.proc.v.r7),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.wcam.a,ID.wcam.v.y)])},
-  'z-video':{ti:'Laptop professionnel — Montage vidéo',rd:'Premiere Pro et After Effects. Core Ultra 7 avec GPU et 16–32 Go de RAM.',tip:'💼 Windows Pro — requis pour les environnements professionnels.',url:u([p(ID.os.a,ID.os.v.wp),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.u7),p(ID.proc.a,ID.proc.v.r7),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.gpu.a,ID.gpu.v.r4050),p(ID.gpu.a,ID.gpu.v.r4060),p(ID.wcam.a,ID.wcam.v.y)])},
-  'z-3d':{ti:'Laptop professionnel — 3D/AutoCAD',rd:'AutoCAD et Solidworks. Core Ultra 7/9 avec GPU dédié obligatoire.',tip:'💼 Windows Pro — requis pour les environnements professionnels.',url:u([p(ID.os.a,ID.os.v.wp),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.i9),p(ID.proc.a,ID.proc.v.u7),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.gpu.a,ID.gpu.v.r4050),p(ID.gpu.a,ID.gpu.v.r4060),p(ID.wcam.a,ID.wcam.v.y)])},
-  'c-photo-win':{ti:'Laptop — Retouche photo — Windows',rd:'Photoshop, Lightroom et Canva. Core i5/Ultra 5 avec 16–32 Go de RAM.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i5),p(ID.proc.a,ID.proc.v.u5),p(ID.proc.a,ID.proc.v.r5),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.wcam.a,ID.wcam.v.y)])},
-  'c-photo-mac':{ti:'Laptop — Retouche photo — macOS',rd:'MacBook Air M4 ou M5 — suffisamment puissant pour Photoshop et Lightroom.',tip:'',url:u([p(ID.os.a,ID.os.v.mac),p(ID.proc.a,ID.proc.v.m4),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g24)])},
-  'c-video-win':{ti:'Laptop — Photo & montage vidéo — Windows',rd:'Premiere Pro et After Effects. Core Ultra 7 avec GPU dédié et 16–32 Go de RAM.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.u7),p(ID.proc.a,ID.proc.v.r7),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.gpu.a,ID.gpu.v.r4050),p(ID.gpu.a,ID.gpu.v.r4060),p(ID.wcam.a,ID.wcam.v.y)])},
-  'c-video-mac':{ti:'Laptop — Photo & montage vidéo — macOS',rd:'MacBook Pro M5 Pro pour un montage fluide dans Premiere Pro et Final Cut.',tip:'',url:u([p(ID.os.a,ID.os.v.mac),p(ID.proc.a,ID.proc.v.m4p),p(ID.ram.a,ID.ram.v.g24),p(ID.ram.a,ID.ram.v.g32)])},
-  'c-3d-win':{ti:'Laptop — Conception 2D/3D — Windows',rd:'AutoCAD et Blender. Core Ultra 7 avec GPU dédié requis.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.i9),p(ID.proc.a,ID.proc.v.u7),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.gpu.a,ID.gpu.v.r4050),p(ID.gpu.a,ID.gpu.v.r4060),p(ID.wcam.a,ID.wcam.v.y)])},
-  'g-light-mobile':{ti:'Laptop gaming — Casual — Format compact',rd:'RTX 5060 en 14–15 pouces. Léger à emporter partout.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i5),p(ID.proc.a,ID.proc.v.r5),p(ID.ram.a,ID.ram.v.g16),p(ID.gpu.a,ID.gpu.v.r5060),p(ID.scr.a,ID.scr.v.s14),p(ID.scr.a,ID.scr.v.s15),p(ID.rfr.a,ID.rfr.v.h144)])},
-  'g-light-fixed':{ti:'Laptop gaming — Casual — Grand écran',rd:'RTX 5060 en 16–17 pouces avec pavé numérique pour la maison.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i5),p(ID.proc.a,ID.proc.v.r5),p(ID.ram.a,ID.ram.v.g16),p(ID.gpu.a,ID.gpu.v.r5060),p(ID.scr.a,ID.scr.v.s16),p(ID.scr.a,ID.scr.v.s173),p(ID.rfr.a,ID.rfr.v.h144),p(ID.npad.a,ID.npad.v.y)])},
-  'g-heavy-mobile':{ti:'Laptop gaming — Intensif — Format compact',rd:'RTX 5070/5080 en 16 pouces. Puissant et encore transportable.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.i9),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.gpu.a,ID.gpu.v.r5070),p(ID.gpu.a,ID.gpu.v.r5080),p(ID.scr.a,ID.scr.v.s16),p(ID.rfr.a,ID.rfr.v.h240)])},
-  'g-heavy-fixed':{ti:'Laptop gaming — Intensif — Grand écran',rd:'RTX 5070/5080 en 17 pouces. Performances maximales à la maison.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.i9),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.gpu.a,ID.gpu.v.r5070),p(ID.gpu.a,ID.gpu.v.r5080),p(ID.scr.a,ID.scr.v.s173),p(ID.rfr.a,ID.rfr.v.h240),p(ID.npad.a,ID.npad.v.y)])},
-  'dt-light':{ti:'Desktop — Usage à domicile — Windows',rd:'Navigation, films et email. Un Lenovo ThinkCentre compact suffit.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i3),p(ID.proc.a,ID.proc.v.i5),p(ID.ram.a,ID.ram.v.g8),p(ID.ram.a,ID.ram.v.g16)])},
-  'dt-office':{ti:'Desktop — Bureau & usage intensif — Windows',rd:'Office, retouche photo et 3D. Core i7 avec 16 Go de RAM.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.u7),p(ID.ram.a,ID.ram.v.g16)])},
-};
-
-var RES_MAP={nl:RES_NL,en:RES_EN,fr:RES_FR};
-var RES=RES_MAP[LANG];
-
-// --- Decision tree per language ---
-var TREE_NL={
+var TREES={
+nl:{
   root:{ey:'Stap 1 van 4',ti:'Wat voor toestel zoek je?',su:'We begeleiden je stap voor stap naar de juiste producten.',cols:2,opts:[
-    {i:'💻',n:'Laptop',       d:'Flexibel, thuis én onderweg',          next:'ctx-lap'},
-    {i:'🖥️',n:'Desktop',      d:'Vaste werkplek, meer kracht',           next:'ctx-desk'},
+    {i:'💻',n:'Laptop',d:'Flexibel, thuis én onderweg',next:'lap-os'},
+    {i:'🖥️',n:'Desktop',d:'Vaste werkplek, meer kracht',next:'desk-use'},
   ]},
-  'ctx-lap':{ey:'Stap 2 van 4',ti:'Waarvoor gebruik je de laptop?',su:'Dit bepaalt welke specs je nodig hebt.',cols:2,opts:[
-    {i:'🏠',n:'Thuisgebruik',        d:'Surfen, films, mail, Office',   next:'task-home'},
-    {i:'🎓',n:'Student',             d:'School of hoger onderwijs',     next:'task-student'},
-    {i:'💼',n:'Zakelijk',            d:'Professioneel gebruik',          next:'task-zak'},
-    {i:'🎨',n:'Grafisch & creatief', d:'Foto, video, ontwerp, 3D',       next:'task-creative'},
-    {i:'🎮',n:'Gaming',              d:'PC-games spelen',                next:'task-gaming'},
+  'desk-use':{ey:'Stap 2 van 4',ti:'Waarvoor gebruik je de desktop?',su:'',cols:2,opts:[
+    {i:'🎮',n:'Gaming',d:'RTX 5060 t/m 5090, hoge framerate',res:'dt-gaming'},
+    {i:'💼',n:'Kantoor & zakelijk gebruik',d:'Office, beveiliging, Windows Pro',res:'dt-office'},
   ]},
-  'ctx-desk':{ey:'Stap 2 van 4',ti:'Wat is het gebruik?',su:'Alle desktops in ons aanbod draaien op Windows.',cols:2,opts:[
-    {i:'🏠',n:'Thuisgebruik',               d:'Surfen, films, lichte taken',             res:'dt-light'},
-    {i:'💼',n:'Kantoor & zwaarder gebruik',  d:'Office, beeldbewerking, 3D, engineering', res:'dt-office'},
+  'lap-os':{ey:'Stap 2 van 4',ti:'Windows of macOS?',su:'Dit is de belangrijkste keuze — alles volgt hieruit.',cols:2,opts:[
+    {i:'🪟',n:'Windows',d:'Breed aanbod, gaming, zakelijk',next:'lap-win-ctx'},
+    {i:'🍎',n:'macOS',d:'MacBook Air of MacBook Pro',next:'lap-mac-use'},
   ]},
-  'task-home':{ey:'Stap 3 van 4',ti:'Wat doe je het meest?',su:'Kies ook je voorkeur van besturingssysteem.',cols:2,opts:[
-    {i:'🪟',n:'Surfen & mail',         d:'Nieuws, Netflix, Word — Windows',  res:'home-win-light'},
-    {i:'🪟',n:'Films & series',        d:'Schermkwaliteit telt — Windows',   res:'home-win-media'},
-    {i:'🪟',n:'Office & spreadsheets', d:'Excel, PowerPoint — Windows',      res:'home-win-office'},
-    {i:'🍎',n:'Dagelijks gebruik',     d:'MacBook Air — macOS',              res:'home-mac'},
+  'lap-mac-use':{ey:'Stap 3 van 4',ti:'Waarvoor gebruik je de MacBook?',su:'',cols:2,opts:[
+    {i:'🌐',n:'Dagelijks gebruik & school',d:'Surfen, Office, films, lichte bewerking',res:'mac-air'},
+    {i:'📷',n:'Lichte foto- of videobewerking',d:'Photoshop, Lightroom, iMovie',res:'mac-air'},
+    {i:'🎬',n:'Zware video, 3D of development',d:'Final Cut, Premiere, AutoCAD, Xcode',res:'mac-pro'},
   ]},
-  'task-student':{ey:'Stap 3 van 4',ti:'Welk type studie?',su:'Dit bepaalt hoeveel rekenkracht je nodig hebt.',cols:2,opts:[
-    {i:'🏫',n:'Middelbare school',    d:'Verslagen, browser, presentaties', res:'s-mid'},
-    {i:'📚',n:'Economisch / sociaal', d:'Office, onderzoek, verslagen',     res:'s-eco'},
-    {i:'🎨',n:'Creatief / grafisch',  d:'Beeld- en videobewerking',         next:'student-cre-os'},
-    {i:'⚙️',n:'Technisch / IT',       d:'AutoCAD, 3D, programmeren',        res:'s-tech'},
+  'lap-win-ctx':{ey:'Stap 3 van 4',ti:'Privé of zakelijk?',su:'Zakelijke laptops draaien op Windows Pro voor betere beveiliging.',cols:2,opts:[
+    {i:'🏠',n:'Privé',d:'Thuis, school of studie',next:'lap-win-priv'},
+    {i:'💼',n:'Zakelijk',d:'Windows Pro, BitLocker, Remote Desktop',next:'lap-win-zak'},
   ]},
-  'student-cre-os':{ey:'Stap 4 van 4',ti:'Windows of macOS?',su:'Beide zijn uitstekend voor creatief werk.',cols:2,opts:[
-    {i:'🪟',n:'Windows',d:'Breed softwareaanbod, upgradebaar',  res:'s-cre-win'},
-    {i:'🍎',n:'macOS',  d:'MacBook Air — licht en krachtig',   res:'s-cre-mac'},
+  'lap-win-priv':{ey:'Stap 4 van 4',ti:'Waarvoor gebruik je hem voornamelijk?',su:'',cols:2,opts:[
+    {i:'🌐',n:'Surfen, mail & Office',d:'Dagelijks gebruik, films, tekstverwerking',res:'priv-office'},
+    {i:'📚',n:'School of studie',d:'Verslagen, presentaties, onderzoek',res:'priv-school'},
+    {i:'📷',n:'Fotobewerking',d:'Photoshop, Lightroom, Canva',res:'priv-photo'},
+    {i:'🎬',n:'Foto- & videobewerking',d:'Premiere Pro, After Effects',res:'priv-video'},
+    {i:'🎮',n:'Gaming',d:'PC-games spelen',next:'lap-gaming'},
   ]},
-  'task-zak':{ey:'Stap 3 van 4',ti:'Wat zijn je voornaamste werktaken?',su:'Zakelijke laptops draaien op Windows Pro voor BitLocker en Remote Desktop.',cols:2,opts:[
-    {i:'📧',n:'E-mail & Office',         d:'Word, Excel, Outlook, Teams',  res:'z-office'},
-    {i:'📷',n:'Digitaal ontwerp / foto',  d:'Photoshop, Illustrator',       res:'z-photo'},
-    {i:'🎬',n:'Videobewerking',           d:'Premiere Pro, After Effects',  res:'z-video'},
-    {i:'📐',n:'3D / AutoCAD',             d:'AutoCAD, Blender, Solidworks', res:'z-3d'},
+  'lap-gaming':{ey:'Stap 4 van 4',ti:'Hoe intensief ga je gamen?',su:'Dit bepaalt de videokaart.',cols:2,opts:[
+    {i:'🕹️',n:'Casual & e-sports',d:'Fortnite, CoD, Minecraft — full HD',res:'priv-gaming-casual'},
+    {i:'🎮',n:'Zwaar & AAA',d:'Flight Simulator, Elden Ring, 4K',res:'priv-gaming-heavy'},
   ]},
-  'task-creative':{ey:'Stap 3 van 4',ti:'Welke creatieve taken?',su:'',cols:2,opts:[
-    {i:'📷',n:'Fotobewerking',           d:'Photoshop, Lightroom, Canva',  next:'creative-photo-os'},
-    {i:'🎬',n:'Foto- & videobewerking',  d:'Premiere Pro, After Effects',  next:'creative-video-os'},
-    {i:'📐',n:'2D / 3D ontwerp',         d:'AutoCAD, Blender, Shapr3D',    res:'c-3d-win'},
+  'lap-win-zak':{ey:'Stap 4 van 4',ti:'Wat zijn je voornaamste werktaken?',su:'',cols:2,opts:[
+    {i:'📧',n:'Mail, Office & boekhouding',d:'Word, Excel, Outlook, Teams',res:'zak-office'},
+    {i:'📷',n:'Digitaal ontwerp & foto',d:'Photoshop, Illustrator, InDesign',res:'zak-photo'},
+    {i:'🎬',n:'Video & 3D',d:'Premiere Pro, AutoCAD, Solidworks',res:'zak-video-3d'},
   ]},
-  'creative-photo-os':{ey:'Stap 4 van 4',ti:'Windows of macOS?',su:'',cols:2,opts:[
-    {i:'🪟',n:'Windows',d:'Breed softwareaanbod',               res:'c-photo-win'},
-    {i:'🍎',n:'macOS',  d:'MacBook Air — krachtig en efficiënt',res:'c-photo-mac'},
+},
+en:{
+  root:{ey:'Step 1 of 4',ti:'What type of device are you looking for?',su:"We'll guide you step by step to the right products.",cols:2,opts:[
+    {i:'💻',n:'Laptop',d:'Flexible, at home and on the go',next:'lap-os'},
+    {i:'🖥️',n:'Desktop',d:'Fixed workstation, more power',next:'desk-use'},
   ]},
-  'creative-video-os':{ey:'Stap 4 van 4',ti:'Windows of macOS?',su:'',cols:2,opts:[
-    {i:'🪟',n:'Windows',d:'RTX GPU voor hardware versnelling',          res:'c-video-win'},
-    {i:'🍎',n:'macOS',  d:'MacBook Pro M5 Pro — Final Cut & Premiere',  res:'c-video-mac'},
+  'desk-use':{ey:'Step 2 of 4',ti:'What will you use the desktop for?',su:'',cols:2,opts:[
+    {i:'🎮',n:'Gaming',d:'RTX 5060 to 5090, high framerates',res:'dt-gaming'},
+    {i:'💼',n:'Office & business use',d:'Office, security, Windows Pro',res:'dt-office'},
   ]},
-  'task-gaming':{ey:'Stap 3 van 4',ti:'Hoe intensief ga je gamen?',su:'Dit bepaalt de videokaart en het scherm.',cols:2,opts:[
-    {i:'🕹️',n:'Casual / e-sports',  d:'Indie games, shooters, full HD',   next:'gaming-light-form'},
-    {i:'🎮', n:'Zwaar (AAA / 4K)',   d:'High-end games, hoge refresh rate', next:'gaming-heavy-form'},
+  'lap-os':{ey:'Step 2 of 4',ti:'Windows or macOS?',su:'This is the most important choice — everything follows from it.',cols:2,opts:[
+    {i:'🪟',n:'Windows',d:'Wide range, gaming, business',next:'lap-win-ctx'},
+    {i:'🍎',n:'macOS',d:'MacBook Air or MacBook Pro',next:'lap-mac-use'},
   ]},
-  'gaming-light-form':{ey:'Stap 4 van 4',ti:'Gebruik je de laptop ook onderweg?',su:'Dit bepaalt het schermformaat.',cols:2,opts:[
-    {i:'🎒',n:'Ja, ook onderweg',d:'13–15 inch — compact en licht',  res:'g-light-mobile'},
-    {i:'🏠',n:'Vooral thuis',    d:'16–17 inch — groot scherm',       res:'g-light-fixed'},
+  'lap-mac-use':{ey:'Step 3 of 4',ti:'What will you use the MacBook for?',su:'',cols:2,opts:[
+    {i:'🌐',n:'Everyday use & school',d:'Browsing, Office, movies, light editing',res:'mac-air'},
+    {i:'📷',n:'Light photo or video editing',d:'Photoshop, Lightroom, iMovie',res:'mac-air'},
+    {i:'🎬',n:'Heavy video, 3D or development',d:'Final Cut, Premiere, AutoCAD, Xcode',res:'mac-pro'},
   ]},
-  'gaming-heavy-form':{ey:'Stap 4 van 4',ti:'Gebruik je de laptop ook onderweg?',su:'Dit bepaalt het schermformaat.',cols:2,opts:[
-    {i:'🎒',n:'Ja, ook onderweg',d:'16 inch — krachtig en nog meebaar', res:'g-heavy-mobile'},
-    {i:'🏠',n:'Vooral thuis',    d:'17 inch — maximale prestaties',     res:'g-heavy-fixed'},
+  'lap-win-ctx':{ey:'Step 3 of 4',ti:'Personal or business use?',su:'Business laptops run Windows Pro for better security.',cols:2,opts:[
+    {i:'🏠',n:'Personal',d:'Home, school or studies',next:'lap-win-priv'},
+    {i:'💼',n:'Business',d:'Windows Pro, BitLocker, Remote Desktop',next:'lap-win-zak'},
   ]},
-};
-
-var TREE_EN={
-  root:{ey:'Step 1 of 4',ti:'What type of device are you looking for?',su:'We\'ll guide you step by step to the right products.',cols:2,opts:[
-    {i:'💻',n:'Laptop',  d:'Flexible, at home and on the go',      next:'ctx-lap'},
-    {i:'🖥️',n:'Desktop', d:'Fixed workstation, more power',        next:'ctx-desk'},
+  'lap-win-priv':{ey:'Step 4 of 4',ti:'What will you mainly use it for?',su:'',cols:2,opts:[
+    {i:'🌐',n:'Browsing, email & Office',d:'Daily use, movies, word processing',res:'priv-office'},
+    {i:'📚',n:'School or studies',d:'Essays, presentations, research',res:'priv-school'},
+    {i:'📷',n:'Photo editing',d:'Photoshop, Lightroom, Canva',res:'priv-photo'},
+    {i:'🎬',n:'Photo & video editing',d:'Premiere Pro, After Effects',res:'priv-video'},
+    {i:'🎮',n:'Gaming',d:'Playing PC games',next:'lap-gaming'},
   ]},
-  'ctx-lap':{ey:'Step 2 of 4',ti:'What will you use the laptop for?',su:'This determines which specs you need.',cols:2,opts:[
-    {i:'🏠',n:'Home use',             d:'Browsing, movies, email, Office',  next:'task-home'},
-    {i:'🎓',n:'Student',              d:'Secondary school or university',   next:'task-student'},
-    {i:'💼',n:'Business',             d:'Professional use',                 next:'task-zak'},
-    {i:'🎨',n:'Graphic & creative',   d:'Photo, video, design, 3D',         next:'task-creative'},
-    {i:'🎮',n:'Gaming',               d:'Playing PC games',                 next:'task-gaming'},
+  'lap-gaming':{ey:'Step 4 of 4',ti:'How intensive will your gaming be?',su:'This determines the GPU.',cols:2,opts:[
+    {i:'🕹️',n:'Casual & e-sports',d:'Fortnite, CoD, Minecraft — full HD',res:'priv-gaming-casual'},
+    {i:'🎮',n:'Heavy & AAA',d:'Flight Simulator, Elden Ring, 4K',res:'priv-gaming-heavy'},
   ]},
-  'ctx-desk':{ey:'Step 2 of 4',ti:'What will you use it for?',su:'All desktops in our range run Windows.',cols:2,opts:[
-    {i:'🏠',n:'Home use',                d:'Browsing, movies, light tasks',              res:'dt-light'},
-    {i:'💼',n:'Office & heavier tasks',  d:'Office, image editing, 3D, engineering',    res:'dt-office'},
+  'lap-win-zak':{ey:'Step 4 of 4',ti:'What are your main work tasks?',su:'',cols:2,opts:[
+    {i:'📧',n:'Email, Office & accounting',d:'Word, Excel, Outlook, Teams',res:'zak-office'},
+    {i:'📷',n:'Digital design & photo',d:'Photoshop, Illustrator, InDesign',res:'zak-photo'},
+    {i:'🎬',n:'Video & 3D',d:'Premiere Pro, AutoCAD, Solidworks',res:'zak-video-3d'},
   ]},
-  'task-home':{ey:'Step 3 of 4',ti:'What do you do most?',su:'Also choose your preferred operating system.',cols:2,opts:[
-    {i:'🪟',n:'Browsing & email',      d:'News, Netflix, Word — Windows',    res:'home-win-light'},
-    {i:'🪟',n:'Movies & streaming',    d:'Screen quality matters — Windows', res:'home-win-media'},
-    {i:'🪟',n:'Office & spreadsheets', d:'Excel, PowerPoint — Windows',      res:'home-win-office'},
-    {i:'🍎',n:'Everyday use',          d:'MacBook Air — macOS',              res:'home-mac'},
-  ]},
-  'task-student':{ey:'Step 3 of 4',ti:'What type of study?',su:'This determines how much processing power you need.',cols:2,opts:[
-    {i:'🏫',n:'Secondary school',         d:'Essays, browser, presentations', res:'s-mid'},
-    {i:'📚',n:'Economics / social sci.',  d:'Office, research, essays',       res:'s-eco'},
-    {i:'🎨',n:'Creative / graphic design',d:'Image and video editing',        next:'student-cre-os'},
-    {i:'⚙️',n:'Technical / IT',           d:'AutoCAD, 3D, coding',            res:'s-tech'},
-  ]},
-  'student-cre-os':{ey:'Step 4 of 4',ti:'Windows or macOS?',su:'Both are excellent for creative work.',cols:2,opts:[
-    {i:'🪟',n:'Windows',d:'Wide software range, upgradeable',   res:'s-cre-win'},
-    {i:'🍎',n:'macOS',  d:'MacBook Air — light and powerful',   res:'s-cre-mac'},
-  ]},
-  'task-zak':{ey:'Step 3 of 4',ti:'What are your main work tasks?',su:'Business laptops run Windows Pro for BitLocker and Remote Desktop.',cols:2,opts:[
-    {i:'📧',n:'Email & Office',           d:'Word, Excel, Outlook, Teams',    res:'z-office'},
-    {i:'📷',n:'Digital design / photo',   d:'Photoshop, Illustrator',         res:'z-photo'},
-    {i:'🎬',n:'Video editing',            d:'Premiere Pro, After Effects',    res:'z-video'},
-    {i:'📐',n:'3D / AutoCAD',             d:'AutoCAD, Blender, Solidworks',   res:'z-3d'},
-  ]},
-  'task-creative':{ey:'Step 3 of 4',ti:'Which creative tasks?',su:'',cols:2,opts:[
-    {i:'📷',n:'Photo editing',           d:'Photoshop, Lightroom, Canva',   next:'creative-photo-os'},
-    {i:'🎬',n:'Photo & video editing',   d:'Premiere Pro, After Effects',   next:'creative-video-os'},
-    {i:'📐',n:'2D / 3D design',          d:'AutoCAD, Blender, Shapr3D',     res:'c-3d-win'},
-  ]},
-  'creative-photo-os':{ey:'Step 4 of 4',ti:'Windows or macOS?',su:'',cols:2,opts:[
-    {i:'🪟',n:'Windows',d:'Wide software range',                     res:'c-photo-win'},
-    {i:'🍎',n:'macOS',  d:'MacBook Air — powerful and efficient',    res:'c-photo-mac'},
-  ]},
-  'creative-video-os':{ey:'Step 4 of 4',ti:'Windows or macOS?',su:'',cols:2,opts:[
-    {i:'🪟',n:'Windows',d:'RTX GPU for hardware acceleration',           res:'c-video-win'},
-    {i:'🍎',n:'macOS',  d:'MacBook Pro M5 Pro — Final Cut & Premiere',  res:'c-video-mac'},
-  ]},
-  'task-gaming':{ey:'Step 3 of 4',ti:'How intense will your gaming be?',su:'This determines the GPU and screen.',cols:2,opts:[
-    {i:'🕹️',n:'Casual / e-sports', d:'Indie games, shooters, full HD',    next:'gaming-light-form'},
-    {i:'🎮', n:'Heavy (AAA / 4K)', d:'High-end games, high refresh rate', next:'gaming-heavy-form'},
-  ]},
-  'gaming-light-form':{ey:'Step 4 of 4',ti:'Will you also use the laptop on the go?',su:'This determines the screen size.',cols:2,opts:[
-    {i:'🎒',n:'Yes, on the go too',d:'13–15 inch — compact and light',  res:'g-light-mobile'},
-    {i:'🏠',n:'Mainly at home',    d:'16–17 inch — large screen',       res:'g-light-fixed'},
-  ]},
-  'gaming-heavy-form':{ey:'Step 4 of 4',ti:'Will you also use the laptop on the go?',su:'This determines the screen size.',cols:2,opts:[
-    {i:'🎒',n:'Yes, on the go too',d:'16 inch — powerful and portable',    res:'g-heavy-mobile'},
-    {i:'🏠',n:'Mainly at home',    d:'17 inch — maximum performance',      res:'g-heavy-fixed'},
-  ]},
-};
-
-var TREE_FR={
+},
+fr:{
   root:{ey:'Étape 1 sur 4',ti:'Quel type d\'appareil recherchez-vous ?',su:'Nous vous guidons pas à pas vers les bons produits.',cols:2,opts:[
-    {i:'💻',n:'Laptop',   d:'Flexible, à la maison et en déplacement', next:'ctx-lap'},
-    {i:'🖥️',n:'Desktop',  d:'Poste fixe, plus de puissance',           next:'ctx-desk'},
+    {i:'💻',n:'Laptop',d:'Flexible, à la maison et en déplacement',next:'lap-os'},
+    {i:'🖥️',n:'Desktop',d:'Poste fixe, plus de puissance',next:'desk-use'},
   ]},
-  'ctx-lap':{ey:'Étape 2 sur 4',ti:'À quoi va vous servir le laptop ?',su:'Cela détermine les specs dont vous avez besoin.',cols:2,opts:[
-    {i:'🏠',n:'Usage à domicile',      d:'Navigation, films, email, Office',  next:'task-home'},
-    {i:'🎓',n:'Étudiant',              d:'Secondaire ou supérieur',           next:'task-student'},
-    {i:'💼',n:'Professionnel',         d:'Usage professionnel',               next:'task-zak'},
-    {i:'🎨',n:'Graphique & créatif',   d:'Photo, vidéo, design, 3D',          next:'task-creative'},
-    {i:'🎮',n:'Gaming',                d:'Jouer à des jeux PC',               next:'task-gaming'},
+  'desk-use':{ey:'Étape 2 sur 4',ti:'À quoi va vous servir le desktop ?',su:'',cols:2,opts:[
+    {i:'🎮',n:'Gaming',d:'RTX 5060 à 5090, haute fréquence',res:'dt-gaming'},
+    {i:'💼',n:'Bureau & usage professionnel',d:'Office, sécurité, Windows Pro',res:'dt-office'},
   ]},
-  'ctx-desk':{ey:'Étape 2 sur 4',ti:'Quel est l\'usage prévu ?',su:'Tous les desktops de notre gamme fonctionnent sous Windows.',cols:2,opts:[
-    {i:'🏠',n:'Usage à domicile',             d:'Navigation, films, tâches légères',              res:'dt-light'},
-    {i:'💼',n:'Bureau & usage intensif',       d:'Office, retouche photo, 3D, ingénierie',         res:'dt-office'},
+  'lap-os':{ey:'Étape 2 sur 4',ti:'Windows ou macOS ?',su:'C\'est le choix le plus important — tout en découle.',cols:2,opts:[
+    {i:'🪟',n:'Windows',d:'Large choix, gaming, professionnel',next:'lap-win-ctx'},
+    {i:'🍎',n:'macOS',d:'MacBook Air ou MacBook Pro',next:'lap-mac-use'},
   ]},
-  'task-home':{ey:'Étape 3 sur 4',ti:'Que faites-vous le plus ?',su:'Choisissez également votre système d\'exploitation préféré.',cols:2,opts:[
-    {i:'🪟',n:'Navigation & email',     d:'Actualités, Netflix, Word — Windows',  res:'home-win-light'},
-    {i:'🪟',n:'Films & streaming',      d:'La qualité d\'écran compte — Windows', res:'home-win-media'},
-    {i:'🪟',n:'Office & tableurs',      d:'Excel, PowerPoint — Windows',          res:'home-win-office'},
-    {i:'🍎',n:'Usage quotidien',        d:'MacBook Air — macOS',                  res:'home-mac'},
+  'lap-mac-use':{ey:'Étape 3 sur 4',ti:'À quoi va vous servir le MacBook ?',su:'',cols:2,opts:[
+    {i:'🌐',n:'Usage quotidien & école',d:'Navigation, Office, films, retouche légère',res:'mac-air'},
+    {i:'📷',n:'Retouche photo ou vidéo légère',d:'Photoshop, Lightroom, iMovie',res:'mac-air'},
+    {i:'🎬',n:'Vidéo lourde, 3D ou développement',d:'Final Cut, Premiere, AutoCAD, Xcode',res:'mac-pro'},
   ]},
-  'task-student':{ey:'Étape 3 sur 4',ti:'Quel type d\'études ?',su:'Cela détermine la puissance de calcul nécessaire.',cols:2,opts:[
-    {i:'🏫',n:'Enseignement secondaire',  d:'Travaux, navigateur, présentations',  res:'s-mid'},
-    {i:'📚',n:'Économie / sciences soc.', d:'Office, recherche, travaux',          res:'s-eco'},
-    {i:'🎨',n:'Créatif / graphisme',      d:'Retouche photo et vidéo',             next:'student-cre-os'},
-    {i:'⚙️',n:'Technique / IT',           d:'AutoCAD, 3D, programmation',          res:'s-tech'},
+  'lap-win-ctx':{ey:'Étape 3 sur 4',ti:'Usage privé ou professionnel ?',su:'Les laptops professionnels fonctionnent sous Windows Pro pour une meilleure sécurité.',cols:2,opts:[
+    {i:'🏠',n:'Privé',d:'Maison, école ou études',next:'lap-win-priv'},
+    {i:'💼',n:'Professionnel',d:'Windows Pro, BitLocker, Bureau à distance',next:'lap-win-zak'},
   ]},
-  'student-cre-os':{ey:'Étape 4 sur 4',ti:'Windows ou macOS ?',su:'Les deux sont excellents pour le travail créatif.',cols:2,opts:[
-    {i:'🪟',n:'Windows',d:'Large choix de logiciels, évolutif',     res:'s-cre-win'},
-    {i:'🍎',n:'macOS',  d:'MacBook Air — léger et puissant',        res:'s-cre-mac'},
+  'lap-win-priv':{ey:'Étape 4 sur 4',ti:'À quoi allez-vous principalement l\'utiliser ?',su:'',cols:2,opts:[
+    {i:'🌐',n:'Navigation, email & Office',d:'Usage quotidien, films, traitement de texte',res:'priv-office'},
+    {i:'📚',n:'École ou études',d:'Travaux, présentations, recherche',res:'priv-school'},
+    {i:'📷',n:'Retouche photo',d:'Photoshop, Lightroom, Canva',res:'priv-photo'},
+    {i:'🎬',n:'Retouche photo & vidéo',d:'Premiere Pro, After Effects',res:'priv-video'},
+    {i:'🎮',n:'Gaming',d:'Jouer à des jeux PC',next:'lap-gaming'},
   ]},
-  'task-zak':{ey:'Étape 3 sur 4',ti:'Quelles sont vos principales tâches ?',su:'Les laptops professionnels fonctionnent sous Windows Pro pour BitLocker et Bureau à distance.',cols:2,opts:[
-    {i:'📧',n:'Email & Office',            d:'Word, Excel, Outlook, Teams',      res:'z-office'},
-    {i:'📷',n:'Design numérique / photo',  d:'Photoshop, Illustrator',            res:'z-photo'},
-    {i:'🎬',n:'Montage vidéo',             d:'Premiere Pro, After Effects',       res:'z-video'},
-    {i:'📐',n:'3D / AutoCAD',              d:'AutoCAD, Blender, Solidworks',      res:'z-3d'},
+  'lap-gaming':{ey:'Étape 4 sur 4',ti:'Quelle intensité de jeu ?',su:'Cela détermine la carte graphique.',cols:2,opts:[
+    {i:'🕹️',n:'Casual & e-sports',d:'Fortnite, CoD, Minecraft — full HD',res:'priv-gaming-casual'},
+    {i:'🎮',n:'Intensif & AAA',d:'Flight Simulator, Elden Ring, 4K',res:'priv-gaming-heavy'},
   ]},
-  'task-creative':{ey:'Étape 3 sur 4',ti:'Quelles tâches créatives ?',su:'',cols:2,opts:[
-    {i:'📷',n:'Retouche photo',            d:'Photoshop, Lightroom, Canva',   next:'creative-photo-os'},
-    {i:'🎬',n:'Photo & montage vidéo',     d:'Premiere Pro, After Effects',   next:'creative-video-os'},
-    {i:'📐',n:'Conception 2D / 3D',        d:'AutoCAD, Blender, Shapr3D',     res:'c-3d-win'},
+  'lap-win-zak':{ey:'Étape 4 sur 4',ti:'Quelles sont vos principales tâches ?',su:'',cols:2,opts:[
+    {i:'📧',n:'Email, Office & comptabilité',d:'Word, Excel, Outlook, Teams',res:'zak-office'},
+    {i:'📷',n:'Design numérique & photo',d:'Photoshop, Illustrator, InDesign',res:'zak-photo'},
+    {i:'🎬',n:'Vidéo & 3D',d:'Premiere Pro, AutoCAD, Solidworks',res:'zak-video-3d'},
   ]},
-  'creative-photo-os':{ey:'Étape 4 sur 4',ti:'Windows ou macOS ?',su:'',cols:2,opts:[
-    {i:'🪟',n:'Windows',d:'Large choix de logiciels',                  res:'c-photo-win'},
-    {i:'🍎',n:'macOS',  d:'MacBook Air — puissant et efficace',        res:'c-photo-mac'},
-  ]},
-  'creative-video-os':{ey:'Étape 4 sur 4',ti:'Windows ou macOS ?',su:'',cols:2,opts:[
-    {i:'🪟',n:'Windows',d:'GPU RTX pour l\'accélération matérielle',         res:'c-video-win'},
-    {i:'🍎',n:'macOS',  d:'MacBook Pro M5 Pro — Final Cut & Premiere',       res:'c-video-mac'},
-  ]},
-  'task-gaming':{ey:'Étape 3 sur 4',ti:'Quelle intensité de jeu ?',su:'Cela détermine la carte graphique et l\'écran.',cols:2,opts:[
-    {i:'🕹️',n:'Casual / e-sports', d:'Jeux indés, shooters, full HD',     next:'gaming-light-form'},
-    {i:'🎮', n:'Intensif (AAA / 4K)',d:'Jeux haut de gamme, haute fréquence',next:'gaming-heavy-form'},
-  ]},
-  'gaming-light-form':{ey:'Étape 4 sur 4',ti:'Utiliserez-vous le laptop en déplacement ?',su:'Cela détermine la taille de l\'écran.',cols:2,opts:[
-    {i:'🎒',n:'Oui, en déplacement aussi',d:'13–15 pouces — compact et léger', res:'g-light-mobile'},
-    {i:'🏠',n:'Surtout à la maison',      d:'16–17 pouces — grand écran',      res:'g-light-fixed'},
-  ]},
-  'gaming-heavy-form':{ey:'Étape 4 sur 4',ti:'Utiliserez-vous le laptop en déplacement ?',su:'Cela détermine la taille de l\'écran.',cols:2,opts:[
-    {i:'🎒',n:'Oui, en déplacement aussi',d:'16 pouces — puissant et transportable', res:'g-heavy-mobile'},
-    {i:'🏠',n:'Surtout à la maison',      d:'17 pouces — performances maximales',    res:'g-heavy-fixed'},
-  ]},
+}
 };
 
-var TREE_MAP={nl:TREE_NL,en:TREE_EN,fr:TREE_FR};
-var TREE=TREE_MAP[LANG];
-
-// --- State ---
+var TREE=TREES[LANG];
+var RES_L=RES[LANG];
 var S={step:0,history:[],trail:[]};
 var TOTAL=4;
 
@@ -457,13 +341,13 @@ function renderNode(nodeKey,depth,label){
 }
 
 function showResult(key){
-  var r=RES[key];
+  var r=RES_L[key];
   if(!r) return;
   S.step=TOTAL;
   document.getElementById('kb-ey-res').textContent=t.result;
   document.getElementById('kb-res-body').innerHTML=
     '<div class="kb-rc">'
-    +'<div class="kb-rl">'+esc(t.result_label)+'</div>'
+    +'<div class="kb-rl">'+esc(t.label)+'</div>'
     +'<div class="kb-rn">'+esc(r.ti)+'</div>'
     +'<div class="kb-rd">'+esc(r.rd)+'</div>'
     +'<a class="kb-go" href="'+esc(r.url)+'" target="_top">'+esc(t.view)+'</a>'
@@ -499,10 +383,7 @@ rootNode.opts.forEach(function(opt){
   }));
 });
 
-// Back buttons
-document.getElementById('kb-bk1').textContent=t.back;
-document.getElementById('kb-bk2').textContent=t.back;
-document.getElementById('kb-bk3').textContent=t.back;
+['kb-bk1','kb-bk2','kb-bk3'].forEach(function(id){document.getElementById(id).textContent=t.back;});
 document.getElementById('kb-rst').textContent=t.restart;
 document.getElementById('kb-bk1').addEventListener('click',function(){restart();});
 document.getElementById('kb-bk2').addEventListener('click',function(){goBack();});
