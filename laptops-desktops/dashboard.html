@@ -112,7 +112,19 @@ function loadData() {
       document.getElementById('status-badge').textContent = 'Live';
       document.getElementById('last-updated').textContent = 'Bijgewerkt: ' + new Date().toLocaleTimeString('nl-BE');
       if(data.status === 'ok' && data.rows && data.rows.length > 0){
-        renderDashboard(data.rows);
+        // Map Dutch column names to English
+        var rows = data.rows.map(function(r){
+          return {
+            timestamp: r.timestamp,
+            event:     r.event     || r.event,
+            step:      r.stap      || r.step,
+            choice:    r.keuze     || r.choice,
+            result:    r.resultaat || r.result,
+            lang:      r.taal      || r.lang,
+            domain:    r.domein    || r.domain,
+          };
+        });
+        renderDashboard(rows);
       } else {
         renderEmpty();
       }
