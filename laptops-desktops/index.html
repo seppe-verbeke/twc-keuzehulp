@@ -448,7 +448,8 @@ function renderNode(nodeKey,depth,label){
 function showResult(key){
   var r=RES_L[key];
   if(!r) return;
-  window.top.location.href=r.url;
+  var sep = r.url.indexOf('?') > -1 ? '&' : '?';
+  window.top.location.href = r.url + sep + 'utm_source=keuzehulp&utm_medium=widget&utm_campaign=keuzehulp-laptops';
 }
 
 function restart(){S.step=0;S.history=[];S.trail=[];track('restart','0','','');prog();updateCrumbs();showStep('ks0');}
