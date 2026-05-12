@@ -5,52 +5,35 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Keuzehulp Laptop & Desktop — The Workspace Company</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{width:100%;background:#FAFAFA;font-family:'DM Sans','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a}
-body{padding:24px 20px}
-
-/* progress */
-.kb-prog{display:flex;gap:4px;margin-bottom:24px}
+body{padding:20px}
+.kb-prog{display:flex;gap:4px;margin-bottom:22px}
 .kb-pd{height:3px;border-radius:2px;flex:1;background:#EEE;transition:background .25s}
-.kb-pd.done{background:#3FA49C}
-.kb-pd.act{background:#CCC}
-
-/* stappen */
-.kb-step{display:none}
-.kb-step.on{display:block;animation:kbfade .18s ease}
+.kb-pd.done{background:#3FA49C}.kb-pd.act{background:#CCC}
+.kb-step{display:none}.kb-step.on{display:block;animation:kbfade .18s ease}
 @keyframes kbfade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
-
-/* eyebrow / title / sub */
 .kb-ey{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#3FA49C;margin-bottom:4px}
-.kb-ti{font-family:'Poppins',sans-serif;font-size:20px;font-weight:700;color:#1a1a1a;line-height:1.25;margin-bottom:4px}
-.kb-su{font-size:12px;color:#737373;line-height:1.5;margin-bottom:18px}
-
-/* grid */
-.kb-grid{display:grid;gap:9px;margin-bottom:4px}
-.kb-g2{grid-template-columns:1fr 1fr}
-.kb-g3{grid-template-columns:1fr 1fr 1fr}
-@media(max-width:480px){.kb-g2,.kb-g3{grid-template-columns:1fr 1fr}}
+.kb-ti{font-family:'Poppins',sans-serif;font-size:19px;font-weight:700;color:#1a1a1a;line-height:1.25;margin-bottom:4px}
+.kb-su{font-size:12px;color:#737373;line-height:1.5;margin-bottom:16px}
+.kb-grid{display:grid;gap:8px;margin-bottom:4px}
+.kb-g2{grid-template-columns:1fr 1fr}.kb-g3{grid-template-columns:1fr 1fr 1fr}
+@media(max-width:500px){.kb-g2,.kb-g3{grid-template-columns:1fr 1fr}}
 @media(max-width:340px){.kb-g2,.kb-g3{grid-template-columns:1fr}}
-
-/* optiekaart */
 .kb-opt{background:#fff;border:1.5px solid #E8E8E8;border-radius:8px;padding:12px 13px;cursor:pointer;text-align:left;width:100%;transition:border-color .12s,box-shadow .12s;display:block;font-family:inherit}
 .kb-opt:hover{border-color:#3FA49C;box-shadow:0 0 0 3px rgba(63,164,156,.1)}
 .kb-opt:active{border-color:#2F8A82;background:#F5FAFA}
 .kb-ico{font-size:18px;margin-bottom:4px;display:block}
 .kb-nm{font-size:13px;font-weight:600;color:#1a1a1a;margin-bottom:2px;display:block}
 .kb-ds{font-size:11px;color:#737373;line-height:1.35;display:block}
-
-/* crumb + nav */
-.kb-nav{display:flex;align-items:center;gap:10px;margin-top:16px}
+.kb-nav{display:flex;align-items:center;gap:10px;margin-top:14px}
 .kb-bk{background:none;border:1px solid #D4D4D4;border-radius:4px;padding:6px 12px;font-size:12px;color:#737373;cursor:pointer;font-family:inherit}
 .kb-bk:hover{border-color:#2B2B2B;color:#1a1a1a}
 .kb-cr{font-size:11px;color:#A3A3A3;flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .kb-cr b{color:#4F4F4F;font-weight:500}
-
-/* resultaat */
-.kb-rc{background:#fff;border:1px solid #E8E8E8;border-radius:8px;padding:18px 20px;box-shadow:0 1px 3px rgba(0,0,0,.06);margin-bottom:10px}
+.kb-rc{background:#fff;border:1px solid #E8E8E8;border-radius:8px;padding:18px 20px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
 .kb-rl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#A3A3A3;margin-bottom:5px}
 .kb-rn{font-family:'Poppins',sans-serif;font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:3px}
 .kb-rd{font-size:12px;color:#737373;line-height:1.5;margin-bottom:14px}
@@ -62,366 +45,271 @@ body{padding:24px 20px}
 </style>
 </head>
 <body>
-
 <div id="wk">
   <div class="kb-prog" id="kb-prog"></div>
-
-  <!-- Stap 0 -->
   <div class="kb-step on" id="ks0">
-    <div class="kb-ey">Stap 1 van 3</div>
+    <div class="kb-ey">Stap 1 van 4</div>
     <div class="kb-ti">Wat voor toestel zoek je?</div>
     <div class="kb-su">We begeleiden je stap voor stap naar de juiste producten.</div>
     <div class="kb-grid kb-g2" id="kb-s0"></div>
   </div>
-
-  <!-- Stap 1 -->
   <div class="kb-step" id="ks1">
-    <div class="kb-ey" id="kb-ey1">Stap 2 van 3</div>
-    <div class="kb-ti" id="kb-ti1">Gebruik</div>
-    <div class="kb-su" id="kb-su1"></div>
+    <div class="kb-ey" id="kb-ey1"></div><div class="kb-ti" id="kb-ti1"></div><div class="kb-su" id="kb-su1"></div>
     <div class="kb-grid" id="kb-s1"></div>
     <div class="kb-nav"><button class="kb-bk" id="kb-bk1">← Terug</button><div class="kb-cr" id="kb-cr1"></div></div>
   </div>
-
-  <!-- Stap 2 -->
   <div class="kb-step" id="ks2">
-    <div class="kb-ey" id="kb-ey2">Stap 3 van 3</div>
-    <div class="kb-ti" id="kb-ti2">Verfijning</div>
-    <div class="kb-su" id="kb-su2"></div>
+    <div class="kb-ey" id="kb-ey2"></div><div class="kb-ti" id="kb-ti2"></div><div class="kb-su" id="kb-su2"></div>
     <div class="kb-grid" id="kb-s2"></div>
     <div class="kb-nav"><button class="kb-bk" id="kb-bk2">← Terug</button><div class="kb-cr" id="kb-cr2"></div></div>
   </div>
-
-  <!-- Resultaat -->
+  <div class="kb-step" id="ks3">
+    <div class="kb-ey" id="kb-ey3"></div><div class="kb-ti" id="kb-ti3"></div><div class="kb-su" id="kb-su3"></div>
+    <div class="kb-grid" id="kb-s3"></div>
+    <div class="kb-nav"><button class="kb-bk" id="kb-bk3">← Terug</button><div class="kb-cr" id="kb-cr3"></div></div>
+  </div>
   <div class="kb-step" id="ks-res">
     <div class="kb-ey">Jouw resultaat</div>
-    <div class="kb-ti" id="kb-res-ti"></div>
-    <div class="kb-su" id="kb-res-su"></div>
+    <div class="kb-cr" id="kb-cr-res" style="margin-bottom:12px;font-size:12px"></div>
     <div id="kb-res-body"></div>
     <button class="kb-rst" id="kb-rst">↺ Opnieuw beginnen</button>
   </div>
 </div>
-
 <script>
 (function(){
 'use strict';
+var baseUrl=(function(){var m=window.location.search.match(/[?&]base=([^&]+)/);return m?decodeURIComponent(m[1]).replace(/\/$/,''):'';})();
+var S={step:0,history:[],trail:[]};
+var TOTAL=4;
+var ID={
+  os:{a:8,v:{wh:344,wp:337,mac:1126}},
+  proc:{a:166,v:{i3:339,i5:339,i7:784,i9:943,u5:937,u7:939,u9:1680,r5:365,r7:345,r9:1716,cel:364,m3:713,m4:893,m4p:1112,m4x:1113}},
+  ram:{a:167,v:{g4:361,g8:306,g16:340,g24:352,g32:802}},
+  gpu:{a:206,v:{r4050:1302,r4060:1521,r5060:1715,r5070:1931,r5080:1679}},
+  scr:{a:157,v:{s14:350,s15:1080,s156:338,s16:351,s173:1140}},
+  wcam:{a:207,v:{y:750}},
+  dtyp:{a:278,v:{oled:1580}},
+  rfr:{a:164,v:{h144:921,h240:930}},
+  npad:{a:204,v:{y:720}},
+};
+function u(pairs){var qs=pairs.map(function(x){return'attrib='+x[0]+'-'+x[1];}).join('&');return(baseUrl||'')+'/shop'+(qs?'?'+qs:'');}
+function p(a,v){return[a,v];}
 
-/* ── STATE ── */
-var S = { step: 0, a: {} };
-var TOTAL = 3;
-
-/* ── ATTRIB IDs (Product_Attributen.xlsx) ── */
-var ID = {
-  os:   { a:8,   v:{ wh:344, wp:337, mac:1126 } },
-  proc: { a:166, v:{ i3:339, i5:339, i7:784, i9:943, u5:937, u7:939, r5:365, r7:345, r9:1716, cel:364, m3:713, m4:893, m4p:1112, m4x:1113, m5:1680 } },
-  ram:  { a:167, v:{ g4:361, g8:306, g16:340, g24:352, g32:802 } },
-  gpu:  { a:206, v:{ r4050:1302, r4060:1521, r5060:1715, r5070:1931, r5080:1679 } },
-  scr:  { a:157, v:{ s13:892, s136:714, s14:350, s15:1080, s156:338, s16:351, s173:1140 } },
-  wcam: { a:207, v:{ y:750 } },
-  spk:  { a:161, v:{ y:293 } },
-  dtyp: { a:278, v:{ oled:1580 } },
-  rfr:  { a:164, v:{ h144:921, h240:930 } },
+var RES={
+  'home-win-light':{ti:'Laptop — Surfen & mail — Windows',rd:'Een instapmodel volstaat perfect voor dagelijks gebruik.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i3),p(ID.proc.a,ID.proc.v.r5),p(ID.ram.a,ID.ram.v.g8),p(ID.ram.a,ID.ram.v.g16),p(ID.wcam.a,ID.wcam.v.y)])},
+  'home-win-media':{ti:'Laptop — Films & series — Windows',rd:'Goed scherm staat centraal. OLED voor de beste beleving.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i3),p(ID.proc.a,ID.proc.v.r5),p(ID.ram.a,ID.ram.v.g8),p(ID.ram.a,ID.ram.v.g16),p(ID.dtyp.a,ID.dtyp.v.oled),p(ID.wcam.a,ID.wcam.v.y)])},
+  'home-win-office':{ti:'Laptop — Office & spreadsheets — Windows',rd:'16 GB RAM voor vlot multitasken.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i5),p(ID.proc.a,ID.proc.v.u5),p(ID.proc.a,ID.proc.v.r5),p(ID.ram.a,ID.ram.v.g16),p(ID.wcam.a,ID.wcam.v.y)])},
+  'home-mac':{ti:'MacBook Air — Dagelijks gebruik',rd:'MacBook Air M4 of M5 — de ideale allrounder voor dagelijks gebruik.',tip:'',url:u([p(ID.os.a,ID.os.v.mac),p(ID.proc.a,ID.proc.v.m4),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g24)])},
+  's-mid':{ti:'Laptop — Middelbare school',rd:'Licht en betaalbaar voor verslagen, presentaties en online lessen.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.cel),p(ID.proc.a,ID.proc.v.i3),p(ID.ram.a,ID.ram.v.g4),p(ID.ram.a,ID.ram.v.g8),p(ID.wcam.a,ID.wcam.v.y)])},
+  's-eco':{ti:'Laptop — Student economisch/sociaal',rd:'Office, onderzoek en verslagen. 16 GB RAM voor vlot multitasken.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i5),p(ID.proc.a,ID.proc.v.u5),p(ID.proc.a,ID.proc.v.r5),p(ID.ram.a,ID.ram.v.g16),p(ID.wcam.a,ID.wcam.v.y)])},
+  's-cre-win':{ti:'Laptop — Student creatief/grafisch — Windows',rd:'Beeldbewerking en design. Core i5/i7 met 16–32 GB RAM.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i5),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.u7),p(ID.proc.a,ID.proc.v.r7),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.wcam.a,ID.wcam.v.y)])},
+  's-cre-mac':{ti:'Laptop — Student creatief/grafisch — macOS',rd:'MacBook Air M4 of M5 — krachtig genoeg voor Photoshop en design.',tip:'',url:u([p(ID.os.a,ID.os.v.mac),p(ID.proc.a,ID.proc.v.m4),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g24)])},
+  's-tech':{ti:'Laptop — Student technisch/IT',rd:'AutoCAD, 3D en programmeren. Core Ultra 7 met dedicated GPU.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.u7),p(ID.proc.a,ID.proc.v.r7),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.gpu.a,ID.gpu.v.r4050),p(ID.gpu.a,ID.gpu.v.r4060),p(ID.wcam.a,ID.wcam.v.y)])},
+  'z-office':{ti:'Zakelijke laptop — E-mail & Office',rd:'Windows Pro voor BitLocker en Remote Desktop. Core i5/Ultra 5 met 16 GB.',tip:'💼 Windows Pro — vereist in de meeste bedrijven.',url:u([p(ID.os.a,ID.os.v.wp),p(ID.proc.a,ID.proc.v.i5),p(ID.proc.a,ID.proc.v.u5),p(ID.proc.a,ID.proc.v.r5),p(ID.ram.a,ID.ram.v.g16),p(ID.wcam.a,ID.wcam.v.y)])},
+  'z-photo':{ti:'Zakelijke laptop — Digitaal ontwerp/foto',rd:'Photoshop en Illustrator. Core i5/i7 met 16–32 GB RAM op Windows Pro.',tip:'💼 Windows Pro — vereist voor bedrijfsomgevingen.',url:u([p(ID.os.a,ID.os.v.wp),p(ID.proc.a,ID.proc.v.i5),p(ID.proc.a,ID.proc.v.u7),p(ID.proc.a,ID.proc.v.r7),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.wcam.a,ID.wcam.v.y)])},
+  'z-video':{ti:'Zakelijke laptop — Videobewerking',rd:'Premiere Pro en After Effects. Core Ultra 7 met GPU en 16–32 GB RAM.',tip:'💼 Windows Pro — vereist voor bedrijfsomgevingen.',url:u([p(ID.os.a,ID.os.v.wp),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.u7),p(ID.proc.a,ID.proc.v.r7),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.gpu.a,ID.gpu.v.r4050),p(ID.gpu.a,ID.gpu.v.r4060),p(ID.wcam.a,ID.wcam.v.y)])},
+  'z-3d':{ti:'Zakelijke laptop — 3D/AutoCAD',rd:'AutoCAD en Solidworks. Core Ultra 7/9 met dedicated GPU verplicht.',tip:'💼 Windows Pro — vereist voor bedrijfsomgevingen.',url:u([p(ID.os.a,ID.os.v.wp),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.i9),p(ID.proc.a,ID.proc.v.u7),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.gpu.a,ID.gpu.v.r4050),p(ID.gpu.a,ID.gpu.v.r4060),p(ID.wcam.a,ID.wcam.v.y)])},
+  'c-photo-win':{ti:'Laptop — Fotobewerking — Windows',rd:'Photoshop, Lightroom en Canva. Core i5/Ultra 5 met 16–32 GB RAM.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i5),p(ID.proc.a,ID.proc.v.u5),p(ID.proc.a,ID.proc.v.r5),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.wcam.a,ID.wcam.v.y)])},
+  'c-photo-mac':{ti:'Laptop — Fotobewerking — macOS',rd:'MacBook Air M4 of M5 — krachtig genoeg voor Photoshop en Lightroom.',tip:'',url:u([p(ID.os.a,ID.os.v.mac),p(ID.proc.a,ID.proc.v.m4),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g24)])},
+  'c-video-win':{ti:'Laptop — Foto- & videobewerking — Windows',rd:'Premiere Pro en After Effects. Core Ultra 7 met dedicated GPU én 16–32 GB RAM.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.u7),p(ID.proc.a,ID.proc.v.r7),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.gpu.a,ID.gpu.v.r4050),p(ID.gpu.a,ID.gpu.v.r4060),p(ID.wcam.a,ID.wcam.v.y)])},
+  'c-video-mac':{ti:'Laptop — Foto- & videobewerking — macOS',rd:'MacBook Pro M5 Pro voor vlotte videobewerking in Premiere Pro en Final Cut.',tip:'',url:u([p(ID.os.a,ID.os.v.mac),p(ID.proc.a,ID.proc.v.m4p),p(ID.ram.a,ID.ram.v.g24),p(ID.ram.a,ID.ram.v.g32)])},
+  'c-3d-win':{ti:'Laptop — 2D/3D ontwerp — Windows',rd:'AutoCAD en Blender. Core Ultra 7 met dedicated GPU vereist.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.i9),p(ID.proc.a,ID.proc.v.u7),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.gpu.a,ID.gpu.v.r4050),p(ID.gpu.a,ID.gpu.v.r4060),p(ID.wcam.a,ID.wcam.v.y)])},
+  'g-light-mobile':{ti:'Gaming laptop — Casual — Compact formaat',rd:'RTX 5060 in 14–15 inch. Licht genoeg om mee te nemen.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i5),p(ID.proc.a,ID.proc.v.r5),p(ID.ram.a,ID.ram.v.g16),p(ID.gpu.a,ID.gpu.v.r5060),p(ID.scr.a,ID.scr.v.s14),p(ID.scr.a,ID.scr.v.s15),p(ID.rfr.a,ID.rfr.v.h144)])},
+  'g-light-fixed':{ti:'Gaming laptop — Casual — Groot scherm',rd:'RTX 5060 in 16–17 inch met numpad voor thuis.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i5),p(ID.proc.a,ID.proc.v.r5),p(ID.ram.a,ID.ram.v.g16),p(ID.gpu.a,ID.gpu.v.r5060),p(ID.scr.a,ID.scr.v.s16),p(ID.scr.a,ID.scr.v.s173),p(ID.rfr.a,ID.rfr.v.h144),p(ID.npad.a,ID.npad.v.y)])},
+  'g-heavy-mobile':{ti:'Gaming laptop — Zwaar — Compact formaat',rd:'RTX 5070/5080 in 16 inch. Krachtig en nog meebaar.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.i9),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.gpu.a,ID.gpu.v.r5070),p(ID.gpu.a,ID.gpu.v.r5080),p(ID.scr.a,ID.scr.v.s16),p(ID.rfr.a,ID.rfr.v.h240)])},
+  'g-heavy-fixed':{ti:'Gaming laptop — Zwaar — Groot scherm',rd:'RTX 5070/5080 in 17 inch. Maximale prestaties voor thuis.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.i9),p(ID.ram.a,ID.ram.v.g16),p(ID.ram.a,ID.ram.v.g32),p(ID.gpu.a,ID.gpu.v.r5070),p(ID.gpu.a,ID.gpu.v.r5080),p(ID.scr.a,ID.scr.v.s173),p(ID.rfr.a,ID.rfr.v.h240),p(ID.npad.a,ID.npad.v.y)])},
+  'dt-light':{ti:'Desktop — Thuisgebruik — Windows',rd:'Surfen, films en mail. Een compacte Lenovo ThinkCentre volstaat.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i3),p(ID.proc.a,ID.proc.v.i5),p(ID.ram.a,ID.ram.v.g8),p(ID.ram.a,ID.ram.v.g16)])},
+  'dt-office':{ti:'Desktop — Kantoor & zwaarder gebruik — Windows',rd:'Office, beeldbewerking en 3D. Core i7 met 16 GB RAM.',tip:'',url:u([p(ID.os.a,ID.os.v.wh),p(ID.proc.a,ID.proc.v.i7),p(ID.proc.a,ID.proc.v.u7),p(ID.ram.a,ID.ram.v.g16)])},
 };
 
-/* ── URL BUILDER ── */
-function url(pairs) {
-  if (!pairs.length) return '/shop';
-  return '/shop?' + pairs.map(function(p){ return 'attrib='+p[0]+'-'+p[1]; }).join('&');
-}
-function p(a,v){ return [a,v]; }
-
-/* Vooraf berekende URLs per resultaat */
-var URLS = {
-  /* Thuisgebruik laptop */
-  'home-win-light':  url([p(ID.os.a,ID.os.v.wh), p(ID.proc.a,ID.proc.v.i3), p(ID.proc.a,ID.proc.v.r5), p(ID.ram.a,ID.ram.v.g8), p(ID.ram.a,ID.ram.v.g16), p(ID.wcam.a,ID.wcam.v.y)]),
-  'home-win-media':  url([p(ID.os.a,ID.os.v.wh), p(ID.proc.a,ID.proc.v.i3), p(ID.proc.a,ID.proc.v.r5), p(ID.ram.a,ID.ram.v.g8), p(ID.ram.a,ID.ram.v.g16), p(ID.dtyp.a,ID.dtyp.v.oled), p(ID.wcam.a,ID.wcam.v.y)]),
-  'home-win-office': url([p(ID.os.a,ID.os.v.wh), p(ID.proc.a,ID.proc.v.i5), p(ID.proc.a,ID.proc.v.u5), p(ID.proc.a,ID.proc.v.r5), p(ID.ram.a,ID.ram.v.g16), p(ID.wcam.a,ID.wcam.v.y)]),
-  'home-mac':        url([p(ID.os.a,ID.os.v.mac), p(ID.proc.a,ID.proc.v.m4), p(ID.ram.a,ID.ram.v.g16), p(ID.ram.a,ID.ram.v.g24)]),
-  /* Student */
-  's-mid':  url([p(ID.os.a,ID.os.v.wh), p(ID.proc.a,ID.proc.v.cel), p(ID.proc.a,ID.proc.v.i3), p(ID.ram.a,ID.ram.v.g4), p(ID.ram.a,ID.ram.v.g8), p(ID.wcam.a,ID.wcam.v.y)]),
-  's-eco':  url([p(ID.os.a,ID.os.v.wh), p(ID.proc.a,ID.proc.v.i5), p(ID.proc.a,ID.proc.v.u5), p(ID.proc.a,ID.proc.v.r5), p(ID.ram.a,ID.ram.v.g16), p(ID.wcam.a,ID.wcam.v.y)]),
-  's-cre':  url([p(ID.os.a,ID.os.v.wh), p(ID.proc.a,ID.proc.v.i5), p(ID.proc.a,ID.proc.v.i7), p(ID.proc.a,ID.proc.v.u7), p(ID.proc.a,ID.proc.v.r7), p(ID.ram.a,ID.ram.v.g16), p(ID.ram.a,ID.ram.v.g32), p(ID.wcam.a,ID.wcam.v.y)]),
-  's-tech': url([p(ID.os.a,ID.os.v.wh), p(ID.proc.a,ID.proc.v.i7), p(ID.proc.a,ID.proc.v.u7), p(ID.proc.a,ID.proc.v.r7), p(ID.ram.a,ID.ram.v.g16), p(ID.ram.a,ID.ram.v.g32), p(ID.gpu.a,ID.gpu.v.r4050), p(ID.gpu.a,ID.gpu.v.r4060), p(ID.wcam.a,ID.wcam.v.y)]),
-  /* Zakelijk */
-  'z-office': url([p(ID.os.a,ID.os.v.wp), p(ID.proc.a,ID.proc.v.i5), p(ID.proc.a,ID.proc.v.u5), p(ID.proc.a,ID.proc.v.r5), p(ID.ram.a,ID.ram.v.g16), p(ID.wcam.a,ID.wcam.v.y)]),
-  'z-photo':  url([p(ID.os.a,ID.os.v.wp), p(ID.proc.a,ID.proc.v.i5), p(ID.proc.a,ID.proc.v.u7), p(ID.proc.a,ID.proc.v.r7), p(ID.ram.a,ID.ram.v.g16), p(ID.ram.a,ID.ram.v.g32), p(ID.wcam.a,ID.wcam.v.y)]),
-  'z-video':  url([p(ID.os.a,ID.os.v.wp), p(ID.proc.a,ID.proc.v.i7), p(ID.proc.a,ID.proc.v.u7), p(ID.proc.a,ID.proc.v.r7), p(ID.ram.a,ID.ram.v.g16), p(ID.ram.a,ID.ram.v.g32), p(ID.gpu.a,ID.gpu.v.r4050), p(ID.gpu.a,ID.gpu.v.r4060), p(ID.wcam.a,ID.wcam.v.y)]),
-  'z-3d':     url([p(ID.os.a,ID.os.v.wp), p(ID.proc.a,ID.proc.v.i7), p(ID.proc.a,ID.proc.v.i9), p(ID.proc.a,ID.proc.v.u7), p(ID.ram.a,ID.ram.v.g16), p(ID.ram.a,ID.ram.v.g32), p(ID.gpu.a,ID.gpu.v.r4050), p(ID.gpu.a,ID.gpu.v.r4060), p(ID.wcam.a,ID.wcam.v.y)]),
-  /* Creatief */
-  'c-photo-win': url([p(ID.os.a,ID.os.v.wh), p(ID.proc.a,ID.proc.v.i5), p(ID.proc.a,ID.proc.v.u5), p(ID.proc.a,ID.proc.v.r5), p(ID.ram.a,ID.ram.v.g16), p(ID.ram.a,ID.ram.v.g32), p(ID.wcam.a,ID.wcam.v.y)]),
-  'c-video-win': url([p(ID.os.a,ID.os.v.wh), p(ID.proc.a,ID.proc.v.i7), p(ID.proc.a,ID.proc.v.u7), p(ID.proc.a,ID.proc.v.r7), p(ID.ram.a,ID.ram.v.g16), p(ID.ram.a,ID.ram.v.g32), p(ID.gpu.a,ID.gpu.v.r4050), p(ID.gpu.a,ID.gpu.v.r4060), p(ID.wcam.a,ID.wcam.v.y)]),
-  'c-3d-win':    url([p(ID.os.a,ID.os.v.wh), p(ID.proc.a,ID.proc.v.i7), p(ID.proc.a,ID.proc.v.i9), p(ID.proc.a,ID.proc.v.u7), p(ID.ram.a,ID.ram.v.g16), p(ID.ram.a,ID.ram.v.g32), p(ID.gpu.a,ID.gpu.v.r4050), p(ID.gpu.a,ID.gpu.v.r4060), p(ID.wcam.a,ID.wcam.v.y)]),
-  'c-mac':       url([p(ID.os.a,ID.os.v.mac), p(ID.proc.a,ID.proc.v.m4), p(ID.proc.a,ID.proc.v.m4p), p(ID.ram.a,ID.ram.v.g16), p(ID.ram.a,ID.ram.v.g24), p(ID.ram.a,ID.ram.v.g32)]),
-  /* Gaming */
-  'g-light': url([p(ID.os.a,ID.os.v.wh), p(ID.proc.a,ID.proc.v.i5), p(ID.proc.a,ID.proc.v.i7), p(ID.proc.a,ID.proc.v.r5), p(ID.ram.a,ID.ram.v.g16), p(ID.gpu.a,ID.gpu.v.r5060), p(ID.rfr.a,ID.rfr.v.h144), p(ID.wcam.a,ID.wcam.v.y)]),
-  'g-heavy': url([p(ID.os.a,ID.os.v.wh), p(ID.proc.a,ID.proc.v.i7), p(ID.proc.a,ID.proc.v.i9), p(ID.proc.a,ID.proc.v.r7), p(ID.ram.a,ID.ram.v.g16), p(ID.ram.a,ID.ram.v.g32), p(ID.gpu.a,ID.gpu.v.r5070), p(ID.gpu.a,ID.gpu.v.r5080), p(ID.rfr.a,ID.rfr.v.h240), p(ID.wcam.a,ID.wcam.v.y)]),
-  /* Desktop */
-  'dt-light':  url([p(ID.os.a,ID.os.v.wh), p(ID.proc.a,ID.proc.v.i3), p(ID.proc.a,ID.proc.v.i5), p(ID.ram.a,ID.ram.v.g8), p(ID.ram.a,ID.ram.v.g16)]),
-  'dt-office': url([p(ID.os.a,ID.os.v.wh), p(ID.proc.a,ID.proc.v.i7), p(ID.proc.a,ID.proc.v.u7), p(ID.ram.a,ID.ram.v.g16)]),
+var TREE={
+  root:{cols:2,opts:[
+    {i:'💻',n:'Laptop', d:'Flexibel, thuis én onderweg',next:'ctx-lap'},
+    {i:'🖥️',n:'Desktop',d:'Vaste werkplek, meer kracht', next:'ctx-desk'},
+  ]},
+  'ctx-lap':{ey:'Stap 2 van 4',ti:'Waarvoor gebruik je de laptop?',su:'Dit bepaalt welke specs je nodig hebt.',cols:2,opts:[
+    {i:'🏠',n:'Thuisgebruik',       d:'Surfen, films, mail, Office',next:'task-home'},
+    {i:'🎓',n:'Student',            d:'School of hoger onderwijs',  next:'task-student'},
+    {i:'💼',n:'Zakelijk',           d:'Professioneel gebruik',       next:'task-zak'},
+    {i:'🎨',n:'Grafisch & creatief',d:'Foto, video, ontwerp, 3D',    next:'task-creative'},
+    {i:'🎮',n:'Gaming',             d:'PC-games spelen',             next:'task-gaming'},
+  ]},
+  'ctx-desk':{ey:'Stap 2 van 4',ti:'Wat is het gebruik?',su:'Alle desktops in ons aanbod draaien op Windows.',cols:2,opts:[
+    {i:'🏠',n:'Thuisgebruik',              d:'Surfen, films, lichte taken',            res:'dt-light'},
+    {i:'💼',n:'Kantoor & zwaarder gebruik', d:'Office, beeldbewerking, 3D, engineering',res:'dt-office'},
+  ]},
+  'task-home':{ey:'Stap 3 van 4',ti:'Wat doe je het meest?',su:'Kies ook je voorkeur van besturingssysteem.',cols:2,opts:[
+    {i:'🪟',n:'Surfen & mail',        d:'Nieuws, Netflix, Word — Windows', res:'home-win-light'},
+    {i:'🪟',n:'Films & series',       d:'Schermkwaliteit telt — Windows',  res:'home-win-media'},
+    {i:'🪟',n:'Office & spreadsheets',d:'Excel, PowerPoint — Windows',     res:'home-win-office'},
+    {i:'🍎',n:'Dagelijks gebruik',    d:'MacBook Air — macOS',             res:'home-mac'},
+  ]},
+  'task-student':{ey:'Stap 3 van 4',ti:'Welk type studie?',su:'Dit bepaalt hoeveel rekenkracht je nodig hebt.',cols:2,opts:[
+    {i:'🏫',n:'Middelbare school',   d:'Verslagen, browser, presentaties', res:'s-mid'},
+    {i:'📚',n:'Economisch / sociaal',d:'Office, onderzoek, verslagen',      res:'s-eco'},
+    {i:'🎨',n:'Creatief / grafisch', d:'Beeld- en videobewerking',          next:'student-cre-os'},
+    {i:'⚙️',n:'Technisch / IT',      d:'AutoCAD, 3D, programmeren',         res:'s-tech'},
+  ]},
+  'student-cre-os':{ey:'Stap 4 van 4',ti:'Windows of macOS?',su:'Beide zijn uitstekend voor creatief werk.',cols:2,opts:[
+    {i:'🪟',n:'Windows',d:'Breed softwareaanbod, upgradebaar', res:'s-cre-win'},
+    {i:'🍎',n:'macOS',  d:'MacBook Air — licht en krachtig',  res:'s-cre-mac'},
+  ]},
+  'task-zak':{ey:'Stap 3 van 4',ti:'Wat zijn je voornaamste werktaken?',su:'Zakelijke laptops draaien op Windows Pro voor BitLocker en Remote Desktop.',cols:2,opts:[
+    {i:'📧',n:'E-mail & Office',        d:'Word, Excel, Outlook, Teams',     res:'z-office'},
+    {i:'📷',n:'Digitaal ontwerp / foto', d:'Photoshop, Illustrator',          res:'z-photo'},
+    {i:'🎬',n:'Videobewerking',          d:'Premiere Pro, After Effects',     res:'z-video'},
+    {i:'📐',n:'3D / AutoCAD',            d:'AutoCAD, Blender, Solidworks',    res:'z-3d'},
+  ]},
+  'task-creative':{ey:'Stap 3 van 4',ti:'Welke creatieve taken?',su:'',cols:2,opts:[
+    {i:'📷',n:'Fotobewerking',          d:'Photoshop, Lightroom, Canva',   next:'creative-photo-os'},
+    {i:'🎬',n:'Foto- & videobewerking', d:'Premiere Pro, After Effects',   next:'creative-video-os'},
+    {i:'📐',n:'2D / 3D ontwerp',        d:'AutoCAD, Blender, Shapr3D',     res:'c-3d-win'},
+  ]},
+  'creative-photo-os':{ey:'Stap 4 van 4',ti:'Windows of macOS?',su:'',cols:2,opts:[
+    {i:'🪟',n:'Windows',d:'Breed softwareaanbod',              res:'c-photo-win'},
+    {i:'🍎',n:'macOS',  d:'MacBook Air — krachtig en efficiënt',res:'c-photo-mac'},
+  ]},
+  'creative-video-os':{ey:'Stap 4 van 4',ti:'Windows of macOS?',su:'',cols:2,opts:[
+    {i:'🪟',n:'Windows',d:'RTX GPU voor hardware versnelling',         res:'c-video-win'},
+    {i:'🍎',n:'macOS',  d:'MacBook Pro M5 Pro — Final Cut & Premiere', res:'c-video-mac'},
+  ]},
+  'task-gaming':{ey:'Stap 3 van 4',ti:'Hoe intensief ga je gamen?',su:'Dit bepaalt de videokaart en het scherm.',cols:2,opts:[
+    {i:'🕹️',n:'Casual / e-sports',d:'Indie games, shooters, full HD',     next:'gaming-light-form'},
+    {i:'🎮', n:'Zwaar (AAA / 4K)', d:'High-end games, hoge refresh rate',  next:'gaming-heavy-form'},
+  ]},
+  'gaming-light-form':{ey:'Stap 4 van 4',ti:'Gebruik je de laptop ook onderweg?',su:'Dit bepaalt het schermformaat.',cols:2,opts:[
+    {i:'🎒',n:'Ja, ook onderweg',d:'13–15 inch — compact en licht',   res:'g-light-mobile'},
+    {i:'🏠',n:'Vooral thuis',    d:'16–17 inch — groot scherm',        res:'g-light-fixed'},
+  ]},
+  'gaming-heavy-form':{ey:'Stap 4 van 4',ti:'Gebruik je de laptop ook onderweg?',su:'Dit bepaalt het schermformaat.',cols:2,opts:[
+    {i:'🎒',n:'Ja, ook onderweg',d:'16 inch — krachtig en nog meebaar', res:'g-heavy-mobile'},
+    {i:'🏠',n:'Vooral thuis',    d:'17 inch — maximale prestaties',     res:'g-heavy-fixed'},
+  ]},
 };
 
-/* ── RESULTAAT DEFINITIES ── */
-var RES = {
-  'home-win-light':  { ti:'Laptop — Surfen & mail — Windows',        su:'Een instapmodel volstaat perfect voor dagelijks gebruik.',                          tip:'' },
-  'home-win-media':  { ti:'Laptop — Films & series — Windows',        su:'Goed scherm staat centraal. OLED voor de beste beleving.',                         tip:'' },
-  'home-win-office': { ti:'Laptop — Office & spreadsheets — Windows', su:'16 GB RAM voor vlot multitasken tussen meerdere programma\'s.',                    tip:'' },
-  'home-mac':        { ti:'MacBook Air — Dagelijks gebruik',          su:'MacBook Air M4 of M5 — de ideale allrounder voor dagelijks gebruik.',               tip:'' },
-  's-mid':           { ti:'Laptop — Middelbare school',               su:'Licht en betaalbaar voor verslagen, presentaties en online lessen.',                tip:'' },
-  's-eco':           { ti:'Laptop — Student economisch/sociaal',      su:'Office, onderzoek en verslagen. 16 GB RAM voor vlot multitasken.',                  tip:'' },
-  's-cre':           { ti:'Laptop — Student creatief/grafisch',       su:'Beeldbewerking en design. Core i5/i7 met 16–32 GB RAM.',                           tip:'' },
-  's-tech':          { ti:'Laptop — Student technisch/IT',            su:'AutoCAD, 3D en programmeren. Core Ultra 7 met dedicated GPU.',                     tip:'' },
-  'z-office':        { ti:'Zakelijke laptop — E-mail & Office',       su:'Windows Pro voor BitLocker en Remote Desktop. Core i5/Ultra 5 met 16 GB.',         tip:'💼 Windows Pro voegt BitLocker en Remote Desktop toe — vereist in de meeste bedrijven.' },
-  'z-photo':         { ti:'Zakelijke laptop — Digitaal ontwerp/foto', su:'Photoshop en Illustrator. Core i5/i7 met 16–32 GB RAM.',                           tip:'💼 Windows Pro — vereist voor bedrijfsomgevingen.' },
-  'z-video':         { ti:'Zakelijke laptop — Videobewerking',        su:'Premiere Pro en After Effects. Core Ultra 7 met GPU en 16–32 GB RAM.',              tip:'💼 Windows Pro — vereist voor bedrijfsomgevingen.' },
-  'z-3d':            { ti:'Zakelijke laptop — 3D/AutoCAD',            su:'AutoCAD en Solidworks. Core Ultra 7/9 met dedicated GPU verplicht.',                tip:'💼 Windows Pro — vereist voor bedrijfsomgevingen.' },
-  'c-photo-win':     { ti:'Laptop — Fotobewerking — Windows',         su:'Photoshop, Lightroom en Canva. Core i5/Ultra 5 met 16–32 GB RAM.',                 tip:'' },
-  'c-video-win':     { ti:'Laptop — Foto- & videobewerking — Windows',su:'Premiere Pro en After Effects. Core Ultra 7 met dedicated GPU én 16–32 GB RAM.',   tip:'' },
-  'c-3d-win':        { ti:'Laptop — 2D/3D ontwerp — Windows',         su:'AutoCAD en Blender. Core Ultra 7 met dedicated GPU vereist.',                      tip:'' },
-  'c-mac':           { ti:'MacBook — Creatief gebruik',               su:'MacBook Air M5 of MacBook Pro M5/M5 Pro voor foto, video en design.',               tip:'' },
-  'g-light':         { ti:'Gaming laptop — Casual / e-sports',        su:'RTX 5060 met 144 Hz scherm voor vloeiend beeld bij shooters en e-sports.',          tip:'' },
-  'g-heavy':         { ti:'Gaming laptop — Zwaar / AAA / 4K',         su:'RTX 5070/5080 met 240 Hz voor maximale vloeiendheid bij zware games.',              tip:'' },
-  'dt-light':        { ti:'Desktop — Thuisgebruik — Windows',         su:'Surfen, films en mail. Een compacte Lenovo ThinkCentre volstaat.',                  tip:'' },
-  'dt-office':       { ti:'Desktop — Kantoor & zwaarder gebruik',     su:'Office, beeldbewerking en 3D. Core i7 met 16 GB RAM.',                              tip:'' },
-};
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
-/* ── STAP DEFINITIES ── */
-var STAPPEN = {
-  /* Stap 0: device */
-  s0: {
-    ey:'Stap 1 van 3', ti:'Wat voor toestel zoek je?',
-    su:'We begeleiden je stap voor stap naar de juiste producten.',
-    cols:2,
-    opts:[
-      { i:'💻', n:'Laptop',  d:'Flexibel, thuis én onderweg',   next:'ctx-lap' },
-      { i:'🖥️', n:'Desktop', d:'Vaste werkplek, meer kracht',   next:'ctx-desk' },
-    ]
-  },
-  /* Stap 1: laptop context */
-  'ctx-lap': {
-    ey:'Stap 2 van 3', ti:'Waarvoor gebruik je de laptop?',
-    su:'Dit bepaalt welke specs je nodig hebt.',
-    cols:2,
-    opts:[
-      { i:'🏠', n:'Thuisgebruik',       d:'Surfen, films, mail, Office',    next:'task-home' },
-      { i:'🎓', n:'Student',            d:'School of hoger onderwijs',       next:'task-student' },
-      { i:'💼', n:'Zakelijk',           d:'Professioneel gebruik',           next:'task-zak' },
-      { i:'🎨', n:'Grafisch & creatief',d:'Foto, video, ontwerp, 3D',        next:'task-creative' },
-      { i:'🎮', n:'Gaming',             d:'PC-games spelen',                 next:'task-gaming' },
-    ]
-  },
-  /* Stap 1: desktop context — direct naar resultaat */
-  'ctx-desk': {
-    ey:'Stap 2 van 3', ti:'Wat is het gebruik?',
-    su:'Alle desktops in ons aanbod draaien op Windows.',
-    cols:2,
-    opts:[
-      { i:'🏠', n:'Thuisgebruik',              d:'Surfen, films, lichte taken',         res:'dt-light' },
-      { i:'💼', n:'Kantoor & zwaarder gebruik', d:'Office, beeldbewerking, 3D, engineering', res:'dt-office' },
-    ]
-  },
-  /* Stap 2: thuisgebruik */
-  'task-home': {
-    ey:'Stap 3 van 3', ti:'Wat doe je het meest?',
-    su:'Kies het gebruik en het besturingssysteem.',
-    cols:2,
-    opts:[
-      { i:'🪟', n:'Surfen & mail',        d:'Nieuws, Netflix, Word — Windows',    res:'home-win-light' },
-      { i:'🪟', n:'Films & series',       d:'Schermkwaliteit telt — Windows',     res:'home-win-media' },
-      { i:'🪟', n:'Office & spreadsheets',d:'Excel, PowerPoint — Windows',        res:'home-win-office' },
-      { i:'🍎', n:'Dagelijks gebruik',    d:'MacBook Air — macOS',                res:'home-mac' },
-    ]
-  },
-  /* Stap 2: student */
-  'task-student': {
-    ey:'Stap 3 van 3', ti:'Welk type studie?',
-    su:'Dit bepaalt hoeveel rekenkracht je nodig hebt.',
-    cols:2,
-    opts:[
-      { i:'🏫', n:'Middelbare school',   d:'Verslagen, browser, presentaties',   res:'s-mid' },
-      { i:'📚', n:'Economisch / sociaal',d:'Office, onderzoek, verslagen',        res:'s-eco' },
-      { i:'🎨', n:'Creatief / grafisch', d:'Beeld- en videobewerking',            res:'s-cre' },
-      { i:'⚙️', n:'Technisch / IT',      d:'AutoCAD, 3D, programmeren',           res:'s-tech' },
-    ]
-  },
-  /* Stap 2: zakelijk */
-  'task-zak': {
-    ey:'Stap 3 van 3', ti:'Wat zijn je voornaamste werktaken?',
-    su:'Zakelijke laptops draaien op Windows Pro voor BitLocker en Remote Desktop.',
-    cols:2,
-    opts:[
-      { i:'📧', n:'E-mail & Office',       d:'Word, Excel, Outlook, Teams',       res:'z-office' },
-      { i:'📷', n:'Digitaal ontwerp / foto',d:'Photoshop, Illustrator',            res:'z-photo' },
-      { i:'🎬', n:'Videobewerking',         d:'Premiere Pro, After Effects',       res:'z-video' },
-      { i:'📐', n:'3D / AutoCAD',           d:'AutoCAD, Blender, Solidworks',      res:'z-3d' },
-    ]
-  },
-  /* Stap 2: creatief */
-  'task-creative': {
-    ey:'Stap 3 van 3', ti:'Welke creatieve taken?',
-    su:'Kies ook je voorkeur van besturingssysteem.',
-    cols:2,
-    opts:[
-      { i:'📷', n:'Fotobewerking',         d:'Photoshop, Lightroom — Windows',           res:'c-photo-win' },
-      { i:'🎬', n:'Foto- & videobewerking',d:'Premiere Pro, After Effects — Windows',    res:'c-video-win' },
-      { i:'📐', n:'2D / 3D ontwerp',       d:'AutoCAD, Blender — Windows',               res:'c-3d-win' },
-      { i:'🍎', n:'Creatief gebruik',      d:'Foto, video, design — macOS',              res:'c-mac' },
-    ]
-  },
-  /* Stap 2: gaming */
-  'task-gaming': {
-    ey:'Stap 3 van 3', ti:'Hoe intensief ga je gamen?',
-    su:'Dit bepaalt de videokaart en het scherm.',
-    cols:2,
-    opts:[
-      { i:'🕹️', n:'Casual / e-sports',   d:'Indie games, shooters, full HD',     res:'g-light' },
-      { i:'🎮', n:'Zwaar (AAA / 4K)',    d:'High-end games, hoge refresh rate',   res:'g-heavy' },
-    ]
-  },
-};
-
-/* ── HELPERS ── */
-function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-function mkBtn(icon, name, desc, onclick) {
-  var b = document.createElement('button');
-  b.className = 'kb-opt';
-  b.innerHTML = '<span class="kb-ico">'+icon+'</span><span class="kb-nm">'+esc(name)+'</span><span class="kb-ds">'+esc(desc)+'</span>';
-  b.addEventListener('click', onclick);
-  return b;
-}
-
-function showStep(id) {
-  document.querySelectorAll('#wk .kb-step').forEach(function(s){ s.classList.remove('on'); });
-  document.getElementById(id).classList.add('on');
-  // resize bericht naar parent iframe
+function resize(){
   setTimeout(function(){
-    var h = document.getElementById('wk').scrollHeight;
-    window.parent.postMessage({ wscHeight: h + 48 }, '*');
-  }, 50);
+    window.parent.postMessage({wscHeight:document.getElementById('wk').scrollHeight+40},'*');
+  },60);
 }
 
-function prog() {
-  var el = document.getElementById('kb-prog');
-  el.innerHTML = '';
-  for (var i = 0; i < TOTAL; i++) {
-    var d = document.createElement('div');
-    d.className = 'kb-pd' + (i < S.step ? ' done' : i === S.step ? ' act' : '');
+function showStep(id){
+  document.querySelectorAll('#wk .kb-step').forEach(function(s){s.classList.remove('on');});
+  document.getElementById(id).classList.add('on');
+  resize();
+}
+
+function prog(){
+  var el=document.getElementById('kb-prog');
+  el.innerHTML='';
+  for(var i=0;i<TOTAL;i++){
+    var d=document.createElement('div');
+    d.className='kb-pd'+(i<S.step?' done':i===S.step?' act':'');
     el.appendChild(d);
   }
 }
 
-function crumb() {
-  var labels = [], a = S.a;
-  if (a.d0) labels.push({ 'ctx-lap':'Laptop', 'ctx-desk':'Desktop' }[a.d0] || '');
-  if (a.d1) {
-    var map = { 'task-home':'Thuisgebruik','task-student':'Student','task-zak':'Zakelijk','task-creative':'Creatief','task-gaming':'Gaming','ctx-desk':'Desktop' };
-    labels.push(map[a.d1] || '');
-  }
-  var html = labels.filter(Boolean).map(function(l){ return '<b>'+esc(l)+'</b>'; }).join(' › ');
-  document.querySelectorAll('.kb-cr').forEach(function(el){ el.innerHTML = html; });
+function updateCrumbs(){
+  var html=S.trail.map(function(l){return'<b>'+esc(l)+'</b>';}).join(' › ');
+  document.querySelectorAll('.kb-cr').forEach(function(el){el.innerHTML=html;});
 }
 
-/* ── RENDER STAP ── */
-function renderStap(stap, gridId, eyId, tiId, suId, bkId, crId, depth) {
-  var def = STAPPEN[stap];
-  if (!def) return;
-  document.getElementById(eyId).textContent = def.ey;
-  document.getElementById(tiId).textContent = def.ti;
-  document.getElementById(suId).textContent = def.su;
-  var grid = document.getElementById(gridId);
-  grid.className = 'kb-grid kb-g' + (def.cols || 2);
-  grid.innerHTML = '';
-  def.opts.forEach(function(opt) {
-    var btn = mkBtn(opt.i, opt.n, opt.d, function() {
-      if (opt.res) {
-        // Direct naar resultaat
+function mkBtn(icon,name,desc,onclick){
+  var b=document.createElement('button');
+  b.className='kb-opt';
+  b.innerHTML='<span class="kb-ico">'+icon+'</span><span class="kb-nm">'+esc(name)+'</span><span class="kb-ds">'+esc(desc)+'</span>';
+  b.addEventListener('click',onclick);
+  return b;
+}
+
+var STEP_IDS=[null,'ks1','ks2','ks3'];
+var GRID_IDS=[null,'kb-s1','kb-s2','kb-s3'];
+var EY_IDS=[null,'kb-ey1','kb-ey2','kb-ey3'];
+var TI_IDS=[null,'kb-ti1','kb-ti2','kb-ti3'];
+var SU_IDS=[null,'kb-su1','kb-su2','kb-su3'];
+
+function renderNode(nodeKey, depth, label){
+  var node=TREE[nodeKey];
+  if(!node) return;
+  S.history.push(nodeKey);
+  if(label) S.trail.push(label);
+  S.step=depth;
+
+  document.getElementById(EY_IDS[depth]).textContent=node.ey||('Stap '+(depth+1)+' van 4');
+  document.getElementById(TI_IDS[depth]).textContent=node.ti||'';
+  document.getElementById(SU_IDS[depth]).textContent=node.su||'';
+
+  var grid=document.getElementById(GRID_IDS[depth]);
+  grid.className='kb-grid kb-g'+(node.cols||2);
+  grid.innerHTML='';
+
+  node.opts.forEach(function(opt){
+    grid.appendChild(mkBtn(opt.i,opt.n,opt.d,function(){
+      if(opt.res){
+        S.trail.push(opt.n);
         showResult(opt.res);
-      } else if (opt.next) {
-        // Naar volgende stap
-        if (depth === 0) { S.a.d0 = opt.next; S.step = 1; renderStap1(opt.next); }
-        else             { S.a.d1 = opt.next; S.step = 2; renderStap2(opt.next); }
+      } else if(opt.next){
+        renderNode(opt.next, depth+1, opt.n);
       }
-      crumb();
-    });
-    grid.appendChild(btn);
+      updateCrumbs();
+    }));
   });
+
+  prog(); updateCrumbs(); showStep(STEP_IDS[depth]);
 }
 
-function renderStap1(stap) {
-  renderStap(stap, 'kb-s1', 'kb-ey1', 'kb-ti1', 'kb-su1', 'kb-bk1', 'kb-cr1', 1);
-  prog(); showStep('ks1');
+function showResult(key){
+  var r=RES[key];
+  if(!r) return;
+  S.step=TOTAL;
+  document.getElementById('kb-res-body').innerHTML=
+    '<div class="kb-rc">'
+    +'<div class="kb-rl">Jouw aanbod</div>'
+    +'<div class="kb-rn">'+esc(r.ti)+'</div>'
+    +'<div class="kb-rd">'+esc(r.rd)+'</div>'
+    +'<a class="kb-go" href="'+esc(r.url)+'" target="_top">Bekijk aanbod →</a>'
+    +(r.tip?'<div class="kb-tip">'+esc(r.tip)+'</div>':'')
+    +'</div>';
+  prog(); updateCrumbs(); showStep('ks-res');
 }
 
-function renderStap2(stap) {
-  renderStap(stap, 'kb-s2', 'kb-ey2', 'kb-ti2', 'kb-su2', 'kb-bk2', 'kb-cr2', 2);
-  prog(); showStep('ks2');
+function restart(){
+  S.step=0; S.history=[]; S.trail=[];
+  prog(); updateCrumbs(); showStep('ks0');
 }
 
-/* ── BASE URL (uit ?base= URL parameter) ── */
-var baseUrl = (function() {
-  var m = window.location.search.match(/[?&]base=([^&]+)/);
-  return m ? decodeURIComponent(m[1]).replace(/\/$/, '') : '';
-})();
-
-/* ── RESULTAAT ── */
-function showResult(key) {
-  var r = RES[key];
-  var u = URLS[key];
-  if (!r || !u) return;
-  S.step = 3;
-  // Zet juiste base URL (parent shop of fallback naar relatief)
-  var fullUrl = baseUrl ? baseUrl + u : u;
-  document.getElementById('kb-res-ti').textContent = r.ti;
-  document.getElementById('kb-res-su').textContent = r.su;
-  var body = document.getElementById('kb-res-body');
-  body.innerHTML = '<div class="kb-rc">'
-    + '<div class="kb-rl">Jouw aanbod</div>'
-    + '<div class="kb-rn">'+esc(r.ti)+'</div>'
-    + '<div class="kb-rd">'+esc(r.su)+'</div>'
-    + '<a class="kb-go" href="'+esc(fullUrl)+'" target="_top">Bekijk aanbod →</a>'
-    + (r.tip ? '<div class="kb-tip">'+esc(r.tip)+'</div>' : '')
-    + '</div>';
-  prog(); showStep('ks-res');
+function goBack(){
+  if(S.history.length===0){restart();return;}
+  S.history.pop();
+  S.trail.pop();
+  var depth=S.history.length;
+  if(depth===0){restart();return;}
+  // herstel de vorige node
+  var prevKey=S.history[depth-1];
+  S.history.pop();
+  if(S.trail.length>0) S.trail.pop();
+  renderNode(prevKey, depth, null);
 }
 
-/* ── INITIALISEER ── */
-// Stap 0
-var g0 = document.getElementById('kb-s0');
-g0.className = 'kb-grid kb-g2';
-STAPPEN.s0.opts.forEach(function(opt) {
-  var btn = mkBtn(opt.i, opt.n, opt.d, function() {
-    S.a.d0 = opt.next; S.step = 1;
-    renderStap1(opt.next);
-    crumb();
-  });
-  g0.appendChild(btn);
+// Stap 0 init
+var g0=document.getElementById('kb-s0');
+TREE.root.opts.forEach(function(opt){
+  g0.appendChild(mkBtn(opt.i,opt.n,opt.d,function(){
+    S.history=[]; S.trail=[opt.n];
+    renderNode(opt.next,1,null);
+    updateCrumbs();
+  }));
 });
 
-// Terug knoppen
-document.getElementById('kb-bk1').addEventListener('click', function() {
-  S.step = 0; S.a = {};
-  prog(); crumb(); showStep('ks0');
-});
-document.getElementById('kb-bk2').addEventListener('click', function() {
-  S.step = 1; delete S.a.d1;
-  renderStap1(S.a.d0);
-  crumb();
-});
-
-// Opnieuw
-document.getElementById('kb-rst').addEventListener('click', function() {
-  S.step = 0; S.a = {};
-  prog(); crumb(); showStep('ks0');
-});
+document.getElementById('kb-bk1').addEventListener('click',function(){restart();});
+document.getElementById('kb-bk2').addEventListener('click',function(){goBack();});
+document.getElementById('kb-bk3').addEventListener('click',function(){goBack();});
+document.getElementById('kb-rst').addEventListener('click',function(){restart();});
 
 prog();
-
-// Stuur initiële hoogte naar parent
-window.addEventListener('load', function() {
-  var h = document.getElementById('wk').scrollHeight;
-  window.parent.postMessage({ wscHeight: h + 48 }, '*');
-});
-
+window.addEventListener('load',function(){resize();});
 })();
 </script>
 </body>
