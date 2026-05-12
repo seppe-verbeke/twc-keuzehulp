@@ -154,6 +154,21 @@ var LANG=(function(){
   return 'nl';
 })();
 
+// --- Tracking ---
+var TRACKING_URL='https://script.google.com/macros/s/AKfycbwFTK7k51MR3bwaXrM3xMwZUxLNk1go1rllnEJRc4hz3N25OvY2HgetZjpEpjswhu6d/exec'; // Vul hier je Apps Script deployment URL in
+var DOMAIN=params.base||window.location.origin;
+
+function track(event, step, choice, result){
+  if(!TRACKING_URL) return;
+  try{
+    fetch(TRACKING_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({event:event,step:step,choice:choice,result:result||'',lang:LANG,domain:DOMAIN})
+    });
+  }catch(e){}
+}
+
 var T={
   nl:{back:'← Terug',result:'Jouw resultaat',label:'Jouw aanbod',view:'Bekijk aanbod →',restart:'↺ Opnieuw beginnen'},
   en:{back:'← Back',result:'Your result',label:'Your selection',view:'View selection →',restart:'↺ Start over'},
@@ -412,11 +427,19 @@ function renderNode(nodeKey,depth,label){
   grid.className='kb-grid kb-g'+(node.cols||2);
   grid.innerHTML='';
   node.opts.forEach(function(opt){
-    grid.appendChild(mkBtn(opt.i,opt.n,opt.d,function(){
-      if(opt.res){S.trail.push(opt.n);showResult(opt.res);}
-      else if(opt.next){renderNode(opt.next,depth+1,opt.n);}
-      updateCrumbs();
-    }));
+    (function(o){
+      grid.appendChild(mkBtn(o.i,o.n,o.d,function(){
+        if(o.res){
+          S.trail.push(o.n);
+          track('result',String(depth),o.n,o.res);
+          showResult(o.res);
+        } else if(o.next){
+          track('choice',String(depth),o.n,'');
+          renderNode(o.next,depth+1,o.n);
+        }
+        updateCrumbs();
+      }));
+    })(opt);
   });
   prog();updateCrumbs();showStep(STEP_IDS[depth]);
 }
@@ -427,7 +450,7 @@ function showResult(key){
   window.top.location.href=r.url;
 }
 
-function restart(){S.step=0;S.history=[];S.trail=[];prog();updateCrumbs();showStep('ks0');}
+function restart(){S.step=0;S.history=[];S.trail=[];track('restart','0','','');prog();updateCrumbs();showStep('ks0');}
 function goBack(){
   if(S.history.length===0){restart();return;}
   S.history.pop();S.trail.pop();
@@ -461,6 +484,7 @@ document.getElementById('kb-bk3').addEventListener('click',function(){goBack();}
 document.getElementById('kb-rst').addEventListener('click',function(){restart();});
 
 prog();
+track('start','0','','');
 window.addEventListener('load',function(){resize();});
 })();
 </script>
