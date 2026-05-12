@@ -17,16 +17,6 @@ body{padding:24px 20px}
 .kb-pd.done{background:#3FA49C}
 .kb-pd.act{background:#CCC}
 
-/* logo */
-.kb-logo{display:flex;align-items:center;padding-bottom:16px;margin-bottom:22px;border-bottom:1px solid #EEE}
-.kb-li{display:flex;align-items:center;font-size:14px;font-weight:700}
-.l-the{font-weight:300;font-size:.62em;color:#A3A3A3;align-self:flex-end;padding-bottom:1px;margin-right:3px}
-.l-work{font-weight:700;color:#2B2B2B}
-.l-sl{display:inline-block;width:2px;height:18px;background:#FDD700;transform:skewX(-8deg);margin:0 3px;align-self:stretch}
-.l-sp{font-weight:700;color:#B4B4B4}
-.l-co{font-weight:400;font-size:.42em;color:#A3A3A3;align-self:flex-end;padding-bottom:1px;margin-left:3px}
-.kb-tag{margin-left:auto;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#3FA49C}
-
 /* stappen */
 .kb-step{display:none}
 .kb-step.on{display:block;animation:kbfade .18s ease}
@@ -74,12 +64,6 @@ body{padding:24px 20px}
 <body>
 
 <div id="wk">
-  <div class="kb-logo">
-    <div class="kb-li">
-      <span class="l-the">the</span><span class="l-work">WORK</span><span class="l-sl"></span><span class="l-sp">SPACE</span><span class="l-co">company</span>
-    </div>
-    <span class="kb-tag">Keuzehulp</span>
-  </div>
   <div class="kb-prog" id="kb-prog"></div>
 
   <!-- Stap 0 -->
@@ -373,12 +357,23 @@ function renderStap2(stap) {
   prog(); showStep('ks2');
 }
 
+/* ── BASE URL (ontvangen van parent via postMessage) ── */
+var baseUrl = '';
+window.addEventListener('message', function(e) {
+  if (e.data && e.data.wscBase) {
+    baseUrl = e.data.wscBase.replace(/\/$/, '');
+  }
+  if (e.data && e.data.wscHeight) return; // ignore eigen berichten
+});
+
 /* ── RESULTAAT ── */
 function showResult(key) {
   var r = RES[key];
   var u = URLS[key];
   if (!r || !u) return;
   S.step = 3;
+  // Zet juiste base URL (parent shop of fallback naar relatief)
+  var fullUrl = baseUrl ? baseUrl + u : u;
   document.getElementById('kb-res-ti').textContent = r.ti;
   document.getElementById('kb-res-su').textContent = r.su;
   var body = document.getElementById('kb-res-body');
@@ -386,7 +381,7 @@ function showResult(key) {
     + '<div class="kb-rl">Jouw aanbod</div>'
     + '<div class="kb-rn">'+esc(r.ti)+'</div>'
     + '<div class="kb-rd">'+esc(r.su)+'</div>'
-    + '<a class="kb-go" href="'+esc(u)+'" target="_top">Bekijk aanbod →</a>'
+    + '<a class="kb-go" href="'+esc(fullUrl)+'" target="_top">Bekijk aanbod →</a>'
     + (r.tip ? '<div class="kb-tip">'+esc(r.tip)+'</div>' : '')
     + '</div>';
   prog(); showStep('ks-res');
