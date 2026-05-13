@@ -136,9 +136,13 @@ function setPeriod(d){
 }
 
 function filterRows(rows){
-  if(PERIOD===0) return rows;
+  var filtered=rows.filter(function(r){
+    var d=r.domain||'';
+    return d.indexOf('demo.theworkspacecompany')===-1;
+  });
+  if(PERIOD===0) return filtered;
   var cut=new Date(); cut.setDate(cut.getDate()-PERIOD);
-  return rows.filter(function(r){return new Date(r.timestamp)>=cut;});
+  return filtered.filter(function(r){return new Date(r.timestamp)>=cut;});
 }
 
 function loadData(){
