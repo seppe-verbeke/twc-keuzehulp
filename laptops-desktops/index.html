@@ -194,7 +194,7 @@ var V={
   rtxpro2k:1901,rtxpro4k:1898
 };
 
-function u(pairs,cat){var qs=pairs.map(function(x){return'attrib='+x[0]+'-'+x[1];}).join('&');var base=(baseUrl||'')+'/shop?';if(cat) base+='category='+cat+'&';return base+(qs||'').replace(/^&/,'');}
+function u(pairs,cat){var qs=pairs.map(function(x){return'attrib='+x[0]+'-'+x[1];}).join('&');var slugs={70:'multimedia-laptops-desktops-laptops-windows-laptops-70',71:'multimedia-laptops-desktops-laptops-apple-laptops-71',72:'multimedia-laptops-desktops-desktops-72',73:'multimedia-laptops-desktops-desktops-windows-desktops-73'};var base=(baseUrl||'')+(cat&&slugs[cat]?'/shop/category/'+slugs[cat]+'?category='+cat:'/shop?');return base+(qs?'&'+qs:'');}
 function p(a,v){return[a,v];}
 
 // Processor groups
