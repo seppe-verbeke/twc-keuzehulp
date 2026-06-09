@@ -10,98 +10,35 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{width:100%;background:#fff;font-family:'DM Sans','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a}
 body{padding:24px 20px 20px}
-
-/* Progress dots */
 .kb-prog{display:flex;gap:6px;margin-bottom:28px;align-items:center}
 .kb-pd{width:8px;height:8px;border-radius:50%;background:#E5E5E5;transition:all .3s cubic-bezier(.4,0,.2,1);flex-shrink:0}
 .kb-pd.done{background:#3FA49C;width:8px}
 .kb-pd.act{background:#3FA49C;width:22px;border-radius:4px}
-
-/* Step transitions */
 .kb-step{display:none}
 .kb-step.on{display:block;animation:kbslide .22s cubic-bezier(.4,0,.2,1)}
 @keyframes kbslide{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
-
-/* Header */
 .kb-ey{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#3FA49C;margin-bottom:6px}
 .kb-ti{font-family:'Poppins',sans-serif;font-size:21px;font-weight:700;color:#111;line-height:1.2;margin-bottom:6px}
 .kb-su{font-size:12px;color:#888;line-height:1.5;margin-bottom:18px}
 .kb-su:empty{margin-bottom:18px}
-
-/* Grid */
 .kb-grid{display:grid;gap:10px;margin-bottom:4px}
 .kb-g2{grid-template-columns:1fr 1fr}
 .kb-g3{grid-template-columns:1fr 1fr 1fr}
 @media(max-width:500px){.kb-g2,.kb-g3{grid-template-columns:1fr 1fr}}
 @media(max-width:340px){.kb-g2,.kb-g3{grid-template-columns:1fr}}
-
-/* Option cards */
-.kb-opt{
-  background:#fff;
-  border:1.5px solid #EBEBEB;
-  border-radius:8px;
-  padding:14px 14px 12px;
-  cursor:pointer;
-  text-align:left;
-  width:100%;
-  font-family:inherit;
-  transition:border-color .15s,box-shadow .15s,transform .15s;
-  display:block;
-  position:relative;
-}
-.kb-opt:hover{
-  border-color:#3FA49C;
-  box-shadow:0 4px 16px rgba(63,164,156,.12);
-  transform:translateY(-2px);
-}
-.kb-opt:active{
-  transform:translateY(0);
-  border-color:#2F8A82;
-  background:#F6FBFA;
-}
-.kb-opt.kb-selected{
-  border-color:#3FA49C;
-  background:#F0FAF9;
-  animation:kb-pick .25s ease;
-}
-@keyframes kb-pick{
-  0%{transform:scale(1)}
-  40%{transform:scale(.97)}
-  100%{transform:scale(1)}
-}
+.kb-opt{background:#fff;border:1.5px solid #EBEBEB;border-radius:8px;padding:14px 14px 12px;cursor:pointer;text-align:left;width:100%;font-family:inherit;transition:border-color .15s,box-shadow .15s,transform .15s;display:block;position:relative}
+.kb-opt:hover{border-color:#3FA49C;box-shadow:0 4px 16px rgba(63,164,156,.12);transform:translateY(-2px)}
+.kb-opt:active{transform:translateY(0);border-color:#2F8A82;background:#F6FBFA}
+.kb-opt.kb-selected{border-color:#3FA49C;background:#F0FAF9;animation:kb-pick .25s ease}
+@keyframes kb-pick{0%{transform:scale(1)}40%{transform:scale(.97)}100%{transform:scale(1)}}
 .kb-ico{font-size:22px;margin-bottom:6px;display:block;line-height:1}
 .kb-nm{font-size:13px;font-weight:600;color:#111;margin-bottom:2px;display:block;line-height:1.3}
 .kb-ds{font-size:11px;color:#999;line-height:1.4;display:block}
-
-/* Nav */
 .kb-nav{display:flex;align-items:center;gap:10px;margin-top:18px}
-.kb-bk{
-  background:none;
-  border:none;
-  padding:4px 0;
-  font-size:12px;
-  color:#AAA;
-  cursor:pointer;
-  font-family:inherit;
-  display:flex;
-  align-items:center;
-  gap:4px;
-  transition:color .15s;
-}
+.kb-bk{background:none;border:none;padding:4px 0;font-size:12px;color:#AAA;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px;transition:color .15s}
 .kb-bk:hover{color:#333}
 .kb-cr{font-size:11px;color:#C0C0C0;flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .kb-cr b{color:#888;font-weight:500}
-
-/* Result card (kept for fallback, not shown in normal flow) */
-.kb-rc{background:#fff;border:1px solid #EBEBEB;border-radius:8px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
-.kb-rl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#BBB;margin-bottom:6px}
-.kb-rn{font-family:'Poppins',sans-serif;font-size:16px;font-weight:700;color:#111;margin-bottom:4px}
-.kb-rd{font-size:12px;color:#888;line-height:1.6;margin-bottom:16px}
-.kb-go{display:inline-flex;align-items:center;gap:6px;background:#3FA49C;color:#fff;text-decoration:none;border-radius:8px;padding:11px 22px;font-size:13px;font-weight:600;transition:background .15s,transform .1s}
-.kb-go:hover{background:#2F8A82;transform:translateY(-1px)}
-.kb-tip{background:#FFFBF0;border:1px solid #FFE9A0;border-radius:8px;padding:10px 13px;font-size:12px;color:#7A5500;line-height:1.5;margin-top:12px}
-.kb-rst{display:inline-block;margin-top:14px;background:none;border:none;font-size:12px;color:#BBB;cursor:pointer;font-family:inherit;padding:4px 0}
-.kb-rst:hover{color:#555}
 </style>
 </head>
 <body>
@@ -128,21 +65,12 @@ body{padding:24px 20px 20px}
     <div class="kb-grid" id="kb-s3"></div>
     <div class="kb-nav"><button class="kb-bk" id="kb-bk3"></button><div class="kb-cr" id="kb-cr3"></div></div>
   </div>
-  <div class="kb-step" id="ks-res">
-    <div class="kb-ey" id="kb-ey-res"></div>
-    <div class="kb-cr" id="kb-cr-res" style="margin-bottom:12px;font-size:12px"></div>
-    <div id="kb-res-body"></div>
-    <button class="kb-rst" id="kb-rst"></button>
-  </div>
 </div>
 <script>
 (function(){
 'use strict';
-
 var params=(function(){var m={};window.location.search.replace(/[?&]([^=&]+)=([^&]*)/g,function(_,k,v){m[k]=decodeURIComponent(v);});return m;})();
 var baseUrl=(params.base||'').replace(/\/$/,'');
-
-// Language detection: URL path > ?lang= param > browser language > default NL
 var LANG=(function(){
   var path=params.base?new URL(params.base).pathname:window.location.pathname;
   if(path.indexOf('/fr')>-1) return 'fr';
@@ -154,105 +82,91 @@ var LANG=(function(){
   return 'nl';
 })();
 
-// --- Tracking ---
-var TRACKING_URL='https://script.google.com/macros/s/AKfycbx_UmVZsveDAb36OCvzoxM-KBGU2peH-nCeto3cRFbd6hUhZu2KjDGo0_ycJAqKo1s/exec'; // Vul hier je Apps Script deployment URL in
+var TRACKING_URL='https://script.google.com/macros/s/AKfycbx_UmVZsveDAb36OCvzoxM-KBGU2peH-nCeto3cRFbd6hUhZu2KjDGo0_ycJAqKo1s/exec';
 var DOMAIN=params.base||window.location.origin;
 
-function track(event, step, choice, result){
+function track(event,step,choice,result){
   if(!TRACKING_URL) return;
   try{
-    // no-cors nodig omdat Apps Script geen CORS headers stuurt
-    var payload = JSON.stringify({event:event,step:step,choice:choice,result:result||'',lang:LANG,domain:DOMAIN});
-    fetch(TRACKING_URL + '?callback=x&event='+encodeURIComponent(event)+'&step='+encodeURIComponent(step)+'&choice='+encodeURIComponent(choice)+'&result='+encodeURIComponent(result||'')+'&lang='+encodeURIComponent(LANG)+'&domain='+encodeURIComponent(DOMAIN), {
-      method:'GET',
-      mode:'no-cors'
-    });
+    fetch(TRACKING_URL+'?callback=x&event='+encodeURIComponent(event)+'&step='+encodeURIComponent(step)+'&choice='+encodeURIComponent(choice)+'&result='+encodeURIComponent(result||'')+'&lang='+encodeURIComponent(LANG)+'&domain='+encodeURIComponent(DOMAIN),{method:'GET',mode:'no-cors'});
   }catch(e){}
 }
 
 var T={
-  nl:{back:'← Terug',result:'Jouw resultaat',label:'Jouw aanbod',view:'Bekijk aanbod →',restart:'↺ Opnieuw beginnen'},
-  en:{back:'← Back',result:'Your result',label:'Your selection',view:'View selection →',restart:'↺ Start over'},
-  fr:{back:'← Retour',result:'Votre résultat',label:'Votre sélection',view:'Voir la sélection →',restart:'↺ Recommencer'},
+  nl:{back:'Terug',restart:'↺ Opnieuw beginnen'},
+  en:{back:'Back',restart:'↺ Start over'},
+  fr:{back:'Retour',restart:'↺ Recommencer'},
 };
 var t=T[LANG];
 
-// Odoo attribute IDs — verified against catalog export May 2026
-var A={os:8,proc:166,ram:167,gpu:206,scr:157,wcam:207,dtyp:278,rfr:164,npad:204};
+// Category slugs
+var SLUGS={
+  70:'multimedia-laptops-desktops-laptops-windows-laptops-70',
+  71:'multimedia-laptops-desktops-laptops-apple-laptops-71',
+  72:'multimedia-laptops-desktops-desktops-72',
+};
+
+function u(pairs,cat){
+  var qs=pairs.map(function(x){return'attrib='+x[0]+'-'+x[1];}).join('&');
+  var base=(baseUrl||'')+'/shop/category/'+SLUGS[cat]+'?';
+  return base+(qs||'');
+}
+function p(a,v){return[a,v];}
+
+// Attribute IDs
+var A={os:8,gpu:206};
 var V={
   wh:344,wp:337,mac:1126,
-  i5:339,i7:784,i9:943,
-  u5:1544,u5s2:1699,u7:1545,u7s2:1504,u7s1:939,u9:1680,
-  c5:1696,c7:1698,
-  r5:365,r7:345,r9:1716,r9x:1880,rai9:1808,
-  m4_10:1535,m4_8:1532,m5_10:1785,
-  m5p15:1948,m5p18:1949,m5max:1945,
-  g8:306,g16:340,g24:352,g32:802,g64:803,
+  a18pro:1942,
+  m4_10:1535,m4_8:1532,
+  m5_10:1785,m5_8:1937,
+  m5p16:1950,m5max32:1946,m5max40:1947,
   rtx5060:1715,rtx5060ti:2032,
   rtx5070:1931,rtx5070ti:1810,
   rtx5080:1679,rtx5090:1806,
-  rtxpro2k:1901,rtxpro4k:1898
 };
 
-function u(pairs,cat){var qs=pairs.map(function(x){return'attrib='+x[0]+'-'+x[1];}).join('&');var slugs={70:'multimedia-laptops-desktops-laptops-windows-laptops-70',71:'multimedia-laptops-desktops-laptops-apple-laptops-71',72:'multimedia-laptops-desktops-desktops-72',73:'multimedia-laptops-desktops-desktops-windows-desktops-73'};var base=(baseUrl||'')+(cat&&slugs[cat]?'/shop/category/'+slugs[cat]+'?':'/shop?');return base+(qs||'');}
-function p(a,v){return[a,v];}
-
-// Processor groups
-function U5(){return[p(A.proc,V.u5),p(A.proc,V.u5s2),p(A.proc,V.i5),p(A.proc,V.c5)];}
-function U7(){return[p(A.proc,V.u7),p(A.proc,V.u7s2),p(A.proc,V.u7s1),p(A.proc,V.i7),p(A.proc,V.c7)];}
-function U9(){return[p(A.proc,V.u9)];}
-function MacAir(){return[p(A.proc,V.m4_10),p(A.proc,V.m4_8),p(A.proc,V.m5_10)];}
-function MacPro(){return[p(A.proc,V.m5p15),p(A.proc,V.m5p18),p(A.proc,V.m5max)];}
+// Mac Light = Neo (A18 Pro) + Air (M4/M5 10-core & 8-core) — excludes Pro/Max
+function MacLight(){return[p(A.gpu,V.a18pro),p(A.gpu,V.m4_10),p(A.gpu,V.m4_8),p(A.gpu,V.m5_10),p(A.gpu,V.m5_8)];}
+// Mac Pro = M5 Pro + M5 Max
+function MacPro(){return[p(A.gpu,V.m5p16),p(A.gpu,V.m5max32),p(A.gpu,V.m5max40)];}
+// All NVIDIA
 function AllNvidia(){return[p(A.gpu,V.rtx5060),p(A.gpu,V.rtx5060ti),p(A.gpu,V.rtx5070),p(A.gpu,V.rtx5070ti),p(A.gpu,V.rtx5080),p(A.gpu,V.rtx5090)];}
+// Casual gaming GPU
+function CasualGpu(){return[p(A.gpu,V.rtx5060),p(A.gpu,V.rtx5060ti)];}
+// Heavy gaming GPU
 function HeavyGpu(){return[p(A.gpu,V.rtx5070),p(A.gpu,V.rtx5070ti),p(A.gpu,V.rtx5080),p(A.gpu,V.rtx5090)];}
-function ZakGpu(){return[p(A.gpu,V.rtxpro2k),p(A.gpu,V.rtxpro4k),p(A.gpu,V.rtx5070)];}
 
-// Results per language
 var RES={
 nl:{
-  'dt-gaming':{ti:'Gaming desktop — Windows',rd:'High-end gaming tower met RTX 5060 of hoger. Lenovo Legion of MSI voor de beste gamingprestaties.',tip:'',url:u(AllNvidia(),72)},
-  'dt-office':{ti:'Desktop — Zakelijk gebruik — Windows Pro',rd:'Lenovo ThinkCentre voor kantoor en Office. Beveiligd met BitLocker via Windows Pro.',tip:'💼 Windows Pro — vereist in de meeste bedrijven.',url:u([p(A.os,V.wp)],72)},
-  'mac-air':{ti:'MacBook Air — Dagelijks gebruik',rd:'MacBook Air M4 of M5 — licht, stil en krachtig genoeg voor alles wat je dagelijks doet. Inclusief lichte fotobewerking.',tip:'',url:u([p(A.os,V.mac)],71)},
-  'mac-pro':{ti:'MacBook Pro — Zware taken',rd:'MacBook Pro M5 Pro of M5 Max voor professionele videobewerking, 3D, development en grote bestanden.',tip:'',url:u([p(A.os,V.mac)].concat(MacPro()),71)},
-  'priv-office':{ti:'Laptop — Dagelijks gebruik & Office — Windows',rd:'Samsung Galaxy Book met Intel Core Ultra 5 of Ultra 7, 16 GB RAM. Licht en snel voor surfen, mail, Office en films.',tip:'',url:u([p(A.os,V.wh)],70)},
-  'priv-school':{ti:'Laptop — School & studie — Windows',rd:'Lenovo ThinkBook of HP ProBook met Ultra 5 of i5, 16 GB. Voor verslagen, presentaties, Office en onderzoek.',tip:'',url:u([p(A.os,V.wp)],70)},
-  'priv-photo':{ti:'Laptop — Fotobewerking — Windows',rd:'Samsung Galaxy Book Pro met Ultra 5 of Ultra 7, 16–32 GB. Voor Photoshop, Lightroom en Canva.',tip:'',url:u([p(A.os,V.wh)],70)},
-  'priv-video':{ti:'Laptop — Foto- & videobewerking — Windows',rd:'MSI laptop met RTX GPU voor Premiere Pro en After Effects. Voldoende kracht voor zware bewerkingen.',tip:'',url:u([p(A.os,V.wh)].concat(AllNvidia()),70)},
-  'priv-gaming-casual':{ti:'Gaming laptop — Casual & e-sports',rd:'RTX 5060 voor Fortnite, CoD en Minecraft op full HD met hoge framerates.',tip:'',url:u([p(A.gpu,V.rtx5060),p(A.gpu,V.rtx5060ti)],70)},
-  'priv-gaming-heavy':{ti:'Gaming laptop — Zwaar & AAA',rd:'RTX 5070 Ti, 5080 of 5090 voor Flight Simulator, Elden Ring en 4K gaming.',tip:'',url:u(HeavyGpu(),70)},
-  'zak-office':{ti:'Zakelijke laptop — Mail & Office',rd:'Lenovo ThinkBook, HP ProBook of EliteBook. Ultra 5/i5, 16 GB, Windows Pro met BitLocker en Remote Desktop.',tip:'💼 Windows Pro — vereist in de meeste bedrijven.',url:u([p(A.os,V.wp)],70)},
-  'zak-photo':{ti:'Zakelijke laptop — Digitaal ontwerp & foto',rd:'HP EliteBook of Lenovo ThinkPad met Ultra 7, 16–32 GB. Voor Photoshop, Illustrator en InDesign.',tip:'💼 Windows Pro — vereist voor bedrijfsomgevingen.',url:u([p(A.os,V.wp)],70)},
-  'zak-video-3d':{ti:'Zakelijke laptop — Video & 3D',rd:'Lenovo ThinkPad P-serie met RTX PRO GPU. Voor Premiere Pro, AutoCAD en Solidworks.',tip:'💼 Windows Pro — vereist voor bedrijfsomgevingen.',url:u([p(A.os,V.wp)].concat(ZakGpu()),70)},
+  'dt-gaming':{ti:'Gaming desktop',rd:'High-end gaming tower met RTX 5060 t/m 5090. Lenovo Legion of MSI voor maximale gamingprestaties.',url:u([p(A.os,V.wh)].concat(AllNvidia()),72)},
+  'dt-office':{ti:'Zakelijke desktop',rd:'Lenovo ThinkCentre voor kantoor en Office. Windows Pro met BitLocker en Remote Desktop.',url:u([p(A.os,V.wp)],72)},
+  'mac-light':{ti:'MacBook Air of Neo — Dagelijks gebruik',rd:'MacBook Neo, Air M4 of M5 — licht, stil en krachtig voor alles wat je dagelijks doet. Inclusief fotobewerking.',url:u([p(A.os,V.mac)].concat(MacLight()),71)},
+  'mac-pro':{ti:'MacBook Pro — Zware taken',rd:'MacBook Pro M5 Pro of M5 Max voor professionele videobewerking, 3D, development en grote bestanden.',url:u([p(A.os,V.mac)].concat(MacPro()),71)},
+  'win-light':{ti:'Windows laptop — Dagelijks gebruik',rd:'Lichte Windows laptop voor surfen, mail, Office, school en fotobewerking. Brede keuze aan merken.',url:u([p(A.os,V.wh)],70)},
+  'win-gaming-casual':{ti:'Gaming laptop — Casual & e-sports',rd:'RTX 5060 of 5060 Ti voor Fortnite, CoD en Minecraft op full HD met hoge framerates.',url:u([p(A.os,V.wh)].concat(CasualGpu()),70)},
+  'win-gaming-heavy':{ti:'Gaming laptop — Zwaar & AAA',rd:'RTX 5070 t/m 5090 voor Flight Simulator, Elden Ring en 4K gaming.',url:u([p(A.os,V.wh)].concat(HeavyGpu()),70)},
+  'win-pro':{ti:'Zakelijke laptop — Windows Pro',rd:'Lenovo ThinkBook, HP ProBook of EliteBook. Windows Pro met BitLocker, Remote Desktop en TPM-beveiliging.',url:u([p(A.os,V.wp)],70)},
 },
 en:{
-  'dt-gaming':{ti:'Gaming desktop — Windows',rd:'High-end gaming tower with RTX 5060 or higher. Lenovo Legion or MSI for the best gaming performance.',tip:'',url:u(AllNvidia(),72)},
-  'dt-office':{ti:'Desktop — Business use — Windows Pro',rd:'Lenovo ThinkCentre for office and Office tasks. Secured with BitLocker via Windows Pro.',tip:'💼 Windows Pro — required in most business environments.',url:u([p(A.os,V.wp)],72)},
-  'mac-air':{ti:'MacBook Air — Everyday use',rd:'MacBook Air M4 or M5 — light, silent and powerful enough for everything you do daily. Including light photo editing.',tip:'',url:u([p(A.os,V.mac)],71)},
-  'mac-pro':{ti:'MacBook Pro — Heavy tasks',rd:'MacBook Pro M5 Pro or M5 Max for professional video editing, 3D, development and large files.',tip:'',url:u([p(A.os,V.mac)].concat(MacPro()),71)},
-  'priv-office':{ti:'Laptop — Everyday use & Office — Windows',rd:'Samsung Galaxy Book with Intel Core Ultra 5 or Ultra 7, 16 GB RAM. Light and fast for browsing, email, Office and movies.',tip:'',url:u([p(A.os,V.wh)],70)},
-  'priv-school':{ti:'Laptop — School & studies — Windows',rd:'Lenovo ThinkBook or HP ProBook with Ultra 5 or i5, 16 GB. For essays, presentations, Office and research.',tip:'',url:u([p(A.os,V.wp)],70)},
-  'priv-photo':{ti:'Laptop — Photo editing — Windows',rd:'Samsung Galaxy Book Pro with Ultra 5 or Ultra 7, 16–32 GB. For Photoshop, Lightroom and Canva.',tip:'',url:u([p(A.os,V.wh)],70)},
-  'priv-video':{ti:'Laptop — Photo & video editing — Windows',rd:'MSI laptop with RTX GPU for Premiere Pro and After Effects. Enough power for heavy editing.',tip:'',url:u([p(A.os,V.wh)].concat(AllNvidia()),70)},
-  'priv-gaming-casual':{ti:'Gaming laptop — Casual & e-sports',rd:'RTX 5060 for Fortnite, CoD and Minecraft at full HD with high framerates.',tip:'',url:u([p(A.gpu,V.rtx5060),p(A.gpu,V.rtx5060ti)],70)},
-  'priv-gaming-heavy':{ti:'Gaming laptop — Heavy & AAA',rd:'RTX 5070 Ti, 5080 or 5090 for Flight Simulator, Elden Ring and 4K gaming.',tip:'',url:u(HeavyGpu(),70)},
-  'zak-office':{ti:'Business laptop — Email & Office',rd:'Lenovo ThinkBook, HP ProBook or EliteBook. Ultra 5/i5, 16 GB, Windows Pro with BitLocker and Remote Desktop.',tip:'💼 Windows Pro — required in most business environments.',url:u([p(A.os,V.wp)],70)},
-  'zak-photo':{ti:'Business laptop — Digital design & photo',rd:'HP EliteBook or Lenovo ThinkPad with Ultra 7, 16–32 GB. For Photoshop, Illustrator and InDesign.',tip:'💼 Windows Pro — required for business environments.',url:u([p(A.os,V.wp)],70)},
-  'zak-video-3d':{ti:'Business laptop — Video & 3D',rd:'Lenovo ThinkPad P-series with RTX PRO GPU. For Premiere Pro, AutoCAD and Solidworks.',tip:'💼 Windows Pro — required for business environments.',url:u([p(A.os,V.wp)].concat(ZakGpu()),70)},
+  'dt-gaming':{ti:'Gaming desktop',rd:'High-end gaming tower with RTX 5060 to 5090. Lenovo Legion or MSI for maximum gaming performance.',url:u([p(A.os,V.wh)].concat(AllNvidia()),72)},
+  'dt-office':{ti:'Business desktop',rd:'Lenovo ThinkCentre for office and Office tasks. Windows Pro with BitLocker and Remote Desktop.',url:u([p(A.os,V.wp)],72)},
+  'mac-light':{ti:'MacBook Air or Neo — Everyday use',rd:'MacBook Neo, Air M4 or M5 — light, silent and powerful for everything you do daily. Including photo editing.',url:u([p(A.os,V.mac)].concat(MacLight()),71)},
+  'mac-pro':{ti:'MacBook Pro — Heavy tasks',rd:'MacBook Pro M5 Pro or M5 Max for professional video editing, 3D, development and large files.',url:u([p(A.os,V.mac)].concat(MacPro()),71)},
+  'win-light':{ti:'Windows laptop — Daily use',rd:'Light Windows laptop for browsing, email, Office, school and photo editing. Wide range of brands.',url:u([p(A.os,V.wh)],70)},
+  'win-gaming-casual':{ti:'Gaming laptop — Casual & e-sports',rd:'RTX 5060 or 5060 Ti for Fortnite, CoD and Minecraft at full HD with high framerates.',url:u([p(A.os,V.wh)].concat(CasualGpu()),70)},
+  'win-gaming-heavy':{ti:'Gaming laptop — Heavy & AAA',rd:'RTX 5070 to 5090 for Flight Simulator, Elden Ring and 4K gaming.',url:u([p(A.os,V.wh)].concat(HeavyGpu()),70)},
+  'win-pro':{ti:'Business laptop — Windows Pro',rd:'Lenovo ThinkBook, HP ProBook or EliteBook. Windows Pro with BitLocker, Remote Desktop and TPM security.',url:u([p(A.os,V.wp)],70)},
 },
 fr:{
-  'dt-gaming':{ti:'Desktop gaming — Windows',rd:'Tour gaming avec RTX 5060 ou supérieur. Lenovo Legion ou MSI pour les meilleures performances gaming.',tip:'',url:u(AllNvidia(),72)},
-  'dt-office':{ti:'Desktop — Usage professionnel — Windows Pro',rd:'Lenovo ThinkCentre pour bureau et Office. Sécurisé avec BitLocker via Windows Pro.',tip:'💼 Windows Pro — requis dans la plupart des entreprises.',url:u([p(A.os,V.wp)],72)},
-  'mac-air':{ti:'MacBook Air — Usage quotidien',rd:'MacBook Air M4 ou M5 — léger, silencieux et assez puissant pour tout ce que vous faites au quotidien. Y compris la retouche photo légère.',tip:'',url:u([p(A.os,V.mac)],71)},
-  'mac-pro':{ti:'MacBook Pro — Tâches intensives',rd:'MacBook Pro M5 Pro ou M5 Max pour le montage vidéo professionnel, la 3D, le développement et les grands fichiers.',tip:'',url:u([p(A.os,V.mac)].concat(MacPro()),71)},
-  'priv-office':{ti:'Laptop — Usage quotidien & Office — Windows',rd:'Samsung Galaxy Book avec Intel Core Ultra 5 ou Ultra 7, 16 Go de RAM. Léger et rapide pour la navigation, les emails, Office et les films.',tip:'',url:u([p(A.os,V.wh)],70)},
-  'priv-school':{ti:'Laptop — École & études — Windows',rd:'Lenovo ThinkBook ou HP ProBook avec Ultra 5 ou i5, 16 Go. Pour les travaux, présentations, Office et la recherche.',tip:'',url:u([p(A.os,V.wp)],70)},
-  'priv-photo':{ti:'Laptop — Retouche photo — Windows',rd:'Samsung Galaxy Book Pro avec Ultra 5 ou Ultra 7, 16–32 Go. Pour Photoshop, Lightroom et Canva.',tip:'',url:u([p(A.os,V.wh)],70)},
-  'priv-video':{ti:'Laptop — Retouche photo & vidéo — Windows',rd:'Laptop MSI avec GPU RTX pour Premiere Pro et After Effects. Assez puissant pour les retouches intensives.',tip:'',url:u([p(A.os,V.wh)].concat(AllNvidia()),70)},
-  'priv-gaming-casual':{ti:'Laptop gaming — Casual & e-sports',rd:'RTX 5060 pour Fortnite, CoD et Minecraft en full HD avec de hauts framerates.',tip:'',url:u([p(A.gpu,V.rtx5060),p(A.gpu,V.rtx5060ti)],70)},
-  'priv-gaming-heavy':{ti:'Laptop gaming — Jeux lourds & AAA',rd:'RTX 5070 Ti, 5080 ou 5090 pour Flight Simulator, Elden Ring et le gaming 4K.',tip:'',url:u(HeavyGpu(),70)},
-  'zak-office':{ti:'Laptop professionnel — Email & Office',rd:'Lenovo ThinkBook, HP ProBook ou EliteBook. Ultra 5/i5, 16 Go, Windows Pro avec BitLocker et Bureau à distance.',tip:'💼 Windows Pro — requis dans la plupart des entreprises.',url:u([p(A.os,V.wp)],70)},
-  'zak-photo':{ti:'Laptop professionnel — Design numérique & photo',rd:'HP EliteBook ou Lenovo ThinkPad avec Ultra 7, 16–32 Go. Pour Photoshop, Illustrator et InDesign.',tip:'💼 Windows Pro — requis pour les environnements professionnels.',url:u([p(A.os,V.wp)],70)},
-  'zak-video-3d':{ti:'Laptop professionnel — Vidéo & 3D',rd:'Lenovo ThinkPad série P avec GPU RTX PRO. Pour Premiere Pro, AutoCAD et Solidworks.',tip:'💼 Windows Pro — requis pour les environnements professionnels.',url:u([p(A.os,V.wp)].concat(ZakGpu()),70)},
+  'dt-gaming':{ti:'Desktop gaming',rd:'Tour gaming avec RTX 5060 à 5090. Lenovo Legion ou MSI pour des performances gaming maximales.',url:u([p(A.os,V.wh)].concat(AllNvidia()),72)},
+  'dt-office':{ti:'Desktop professionnel',rd:'Lenovo ThinkCentre pour bureau et Office. Windows Pro avec BitLocker et Bureau à distance.',url:u([p(A.os,V.wp)],72)},
+  'mac-light':{ti:'MacBook Air ou Neo — Usage quotidien',rd:'MacBook Neo, Air M4 ou M5 — léger, silencieux et puissant pour tout ce que vous faites au quotidien. Y compris la retouche photo.',url:u([p(A.os,V.mac)].concat(MacLight()),71)},
+  'mac-pro':{ti:'MacBook Pro — Tâches intensives',rd:'MacBook Pro M5 Pro ou M5 Max pour le montage vidéo professionnel, la 3D, le développement et les grands fichiers.',url:u([p(A.os,V.mac)].concat(MacPro()),71)},
+  'win-light':{ti:'Laptop Windows — Usage quotidien',rd:'Laptop Windows léger pour navigation, email, Office, école et retouche photo. Large choix de marques.',url:u([p(A.os,V.wh)],70)},
+  'win-gaming-casual':{ti:'Laptop gaming — Casual & e-sports',rd:'RTX 5060 ou 5060 Ti pour Fortnite, CoD et Minecraft en full HD avec de hauts framerates.',url:u([p(A.os,V.wh)].concat(CasualGpu()),70)},
+  'win-gaming-heavy':{ti:'Laptop gaming — Intensif & AAA',rd:'RTX 5070 à 5090 pour Flight Simulator, Elden Ring et le gaming 4K.',url:u([p(A.os,V.wh)].concat(HeavyGpu()),70)},
+  'win-pro':{ti:'Laptop professionnel — Windows Pro',rd:'Lenovo ThinkBook, HP ProBook ou EliteBook. Windows Pro avec BitLocker, Bureau à distance et sécurité TPM.',url:u([p(A.os,V.wp)],70)},
 }
 };
 
@@ -268,32 +182,23 @@ nl:{
   ]},
   'lap-os':{ey:'Stap 2',ti:'Windows of macOS?',su:'Dit is de belangrijkste keuze — alles volgt hieruit.',cols:2,opts:[
     {i:'🪟',n:'Windows',d:'Breed aanbod, gaming, zakelijk',next:'lap-win-ctx'},
-    {i:'🍎',n:'macOS',d:'MacBook Air of MacBook Pro',next:'lap-mac-use'},
+    {i:'🍎',n:'macOS',d:'MacBook Neo, Air of Pro',next:'lap-mac'},
   ]},
-  'lap-mac-use':{ey:'Stap 3',ti:'Waarvoor gebruik je de MacBook?',su:'',cols:2,opts:[
-    {i:'🌐',n:'Dagelijks gebruik & school',d:'Surfen, Office, films, lichte bewerking',res:'mac-air'},
-    {i:'📷',n:'Lichte foto- of videobewerking',d:'Photoshop, Lightroom, iMovie',res:'mac-air'},
-    {i:'🎬',n:'Zware video, 3D of development',d:'Final Cut, Premiere, AutoCAD, Xcode',res:'mac-pro'},
+  'lap-mac':{ey:'Stap 3',ti:'Waarvoor gebruik je de MacBook?',su:'',cols:2,opts:[
+    {i:'🌐',n:'Dagelijks gebruik, school of foto',d:'Surfen, Office, films, Photoshop, iMovie',res:'mac-light'},
+    {i:'🎬',n:'Zware video, 3D of development',d:'Final Cut, Premiere Pro, AutoCAD, Xcode',res:'mac-pro'},
   ]},
   'lap-win-ctx':{ey:'Stap 3',ti:'Privé of zakelijk?',su:'Zakelijke laptops draaien op Windows Pro voor betere beveiliging.',cols:2,opts:[
     {i:'🏠',n:'Privé',d:'Thuis, school of studie',next:'lap-win-priv'},
-    {i:'💼',n:'Zakelijk',d:'Windows Pro, BitLocker, Remote Desktop',next:'lap-win-zak'},
+    {i:'💼',n:'Zakelijk',d:'Windows Pro, BitLocker, Remote Desktop',res:'win-pro'},
   ]},
-  'lap-win-priv':{ey:'Stap 4',ti:'Waarvoor gebruik je hem voornamelijk?',su:'',cols:2,opts:[
-    {i:'🌐',n:'Surfen, mail & Office',d:'Dagelijks gebruik, films, tekstverwerking',res:'priv-office'},
-    {i:'📚',n:'School of studie',d:'Verslagen, presentaties, onderzoek',res:'priv-school'},
-    {i:'📷',n:'Fotobewerking',d:'Photoshop, Lightroom, Canva',res:'priv-photo'},
-    {i:'🎬',n:'Foto- & videobewerking',d:'Premiere Pro, After Effects',res:'priv-video'},
-    {i:'🎮',n:'Gaming',d:'PC-games spelen',next:'lap-gaming'},
+  'lap-win-priv':{ey:'Stap 4',ti:'Ga je ook gamen?',su:'',cols:2,opts:[
+    {i:'🌐',n:'Nee — surfen, Office of school',d:'Mail, tekstverwerking, fotobewerking',res:'win-light'},
+    {i:'🎮',n:'Ja — gaming',d:'PC-games spelen',next:'lap-gaming'},
   ]},
   'lap-gaming':{ey:'Stap 4',ti:'Hoe intensief ga je gamen?',su:'Dit bepaalt de videokaart.',cols:2,opts:[
-    {i:'🕹️',n:'Casual & e-sports',d:'Fortnite, CoD, Minecraft — full HD',res:'priv-gaming-casual'},
-    {i:'🎮',n:'Zwaar & AAA',d:'Flight Simulator, Elden Ring, 4K',res:'priv-gaming-heavy'},
-  ]},
-  'lap-win-zak':{ey:'Stap 4',ti:'Wat zijn je voornaamste werktaken?',su:'',cols:2,opts:[
-    {i:'📧',n:'Mail, Office & boekhouding',d:'Word, Excel, Outlook, Teams',res:'zak-office'},
-    {i:'📷',n:'Digitaal ontwerp & foto',d:'Photoshop, Illustrator, InDesign',res:'zak-photo'},
-    {i:'🎬',n:'Video & 3D',d:'Premiere Pro, AutoCAD, Solidworks',res:'zak-video-3d'},
+    {i:'🕹️',n:'Casual & e-sports',d:'Fortnite, CoD, Minecraft — full HD',res:'win-gaming-casual'},
+    {i:'🎮',n:'Zwaar & AAA',d:'Flight Simulator, Elden Ring, 4K',res:'win-gaming-heavy'},
   ]},
 },
 en:{
@@ -307,32 +212,23 @@ en:{
   ]},
   'lap-os':{ey:'Step 2',ti:'Windows or macOS?',su:'This is the most important choice — everything follows from it.',cols:2,opts:[
     {i:'🪟',n:'Windows',d:'Wide range, gaming, business',next:'lap-win-ctx'},
-    {i:'🍎',n:'macOS',d:'MacBook Air or MacBook Pro',next:'lap-mac-use'},
+    {i:'🍎',n:'macOS',d:'MacBook Neo, Air or Pro',next:'lap-mac'},
   ]},
-  'lap-mac-use':{ey:'Step 3',ti:'What will you use the MacBook for?',su:'',cols:2,opts:[
-    {i:'🌐',n:'Everyday use & school',d:'Browsing, Office, movies, light editing',res:'mac-air'},
-    {i:'📷',n:'Light photo or video editing',d:'Photoshop, Lightroom, iMovie',res:'mac-air'},
-    {i:'🎬',n:'Heavy video, 3D or development',d:'Final Cut, Premiere, AutoCAD, Xcode',res:'mac-pro'},
+  'lap-mac':{ey:'Step 3',ti:'What will you use the MacBook for?',su:'',cols:2,opts:[
+    {i:'🌐',n:'Daily use, school or photo',d:'Browsing, Office, movies, Photoshop, iMovie',res:'mac-light'},
+    {i:'🎬',n:'Heavy video, 3D or development',d:'Final Cut, Premiere Pro, AutoCAD, Xcode',res:'mac-pro'},
   ]},
   'lap-win-ctx':{ey:'Step 3',ti:'Personal or business use?',su:'Business laptops run Windows Pro for better security.',cols:2,opts:[
     {i:'🏠',n:'Personal',d:'Home, school or studies',next:'lap-win-priv'},
-    {i:'💼',n:'Business',d:'Windows Pro, BitLocker, Remote Desktop',next:'lap-win-zak'},
+    {i:'💼',n:'Business',d:'Windows Pro, BitLocker, Remote Desktop',res:'win-pro'},
   ]},
-  'lap-win-priv':{ey:'Step 4',ti:'What will you mainly use it for?',su:'',cols:2,opts:[
-    {i:'🌐',n:'Browsing, email & Office',d:'Daily use, movies, word processing',res:'priv-office'},
-    {i:'📚',n:'School or studies',d:'Essays, presentations, research',res:'priv-school'},
-    {i:'📷',n:'Photo editing',d:'Photoshop, Lightroom, Canva',res:'priv-photo'},
-    {i:'🎬',n:'Photo & video editing',d:'Premiere Pro, After Effects',res:'priv-video'},
-    {i:'🎮',n:'Gaming',d:'Playing PC games',next:'lap-gaming'},
+  'lap-win-priv':{ey:'Step 4',ti:'Will you also be gaming?',su:'',cols:2,opts:[
+    {i:'🌐',n:'No — browsing, Office or school',d:'Email, word processing, photo editing',res:'win-light'},
+    {i:'🎮',n:'Yes — gaming',d:'Playing PC games',next:'lap-gaming'},
   ]},
   'lap-gaming':{ey:'Step 4',ti:'How intensive will your gaming be?',su:'This determines the GPU.',cols:2,opts:[
-    {i:'🕹️',n:'Casual & e-sports',d:'Fortnite, CoD, Minecraft — full HD',res:'priv-gaming-casual'},
-    {i:'🎮',n:'Heavy & AAA',d:'Flight Simulator, Elden Ring, 4K',res:'priv-gaming-heavy'},
-  ]},
-  'lap-win-zak':{ey:'Step 4',ti:'What are your main work tasks?',su:'',cols:2,opts:[
-    {i:'📧',n:'Email, Office & accounting',d:'Word, Excel, Outlook, Teams',res:'zak-office'},
-    {i:'📷',n:'Digital design & photo',d:'Photoshop, Illustrator, InDesign',res:'zak-photo'},
-    {i:'🎬',n:'Video & 3D',d:'Premiere Pro, AutoCAD, Solidworks',res:'zak-video-3d'},
+    {i:'🕹️',n:'Casual & e-sports',d:'Fortnite, CoD, Minecraft — full HD',res:'win-gaming-casual'},
+    {i:'🎮',n:'Heavy & AAA',d:'Flight Simulator, Elden Ring, 4K',res:'win-gaming-heavy'},
   ]},
 },
 fr:{
@@ -344,34 +240,25 @@ fr:{
     {i:'🎮',n:'Gaming',d:'RTX 5060 à 5090, haute fréquence',res:'dt-gaming'},
     {i:'💼',n:'Bureau & usage professionnel',d:'Office, sécurité, Windows Pro',res:'dt-office'},
   ]},
-  'lap-os':{ey:'Étape 2',ti:'Windows ou macOS ?',su:'C\'est le choix le plus important — tout en découle.',cols:2,opts:[
+  'lap-os':{ey:'Étape 2',ti:'Windows ou macOS ?',su:"C'est le choix le plus important — tout en découle.",cols:2,opts:[
     {i:'🪟',n:'Windows',d:'Large choix, gaming, professionnel',next:'lap-win-ctx'},
-    {i:'🍎',n:'macOS',d:'MacBook Air ou MacBook Pro',next:'lap-mac-use'},
+    {i:'🍎',n:'macOS',d:'MacBook Neo, Air ou Pro',next:'lap-mac'},
   ]},
-  'lap-mac-use':{ey:'Étape 3',ti:'À quoi va vous servir le MacBook ?',su:'',cols:2,opts:[
-    {i:'🌐',n:'Usage quotidien & école',d:'Navigation, Office, films, retouche légère',res:'mac-air'},
-    {i:'📷',n:'Retouche photo ou vidéo légère',d:'Photoshop, Lightroom, iMovie',res:'mac-air'},
-    {i:'🎬',n:'Vidéo lourde, 3D ou développement',d:'Final Cut, Premiere, AutoCAD, Xcode',res:'mac-pro'},
+  'lap-mac':{ey:'Étape 3',ti:'À quoi va vous servir le MacBook ?',su:'',cols:2,opts:[
+    {i:'🌐',n:'Usage quotidien, école ou photo',d:'Navigation, Office, films, Photoshop, iMovie',res:'mac-light'},
+    {i:'🎬',n:'Vidéo lourde, 3D ou développement',d:'Final Cut, Premiere Pro, AutoCAD, Xcode',res:'mac-pro'},
   ]},
   'lap-win-ctx':{ey:'Étape 3',ti:'Usage privé ou professionnel ?',su:'Les laptops professionnels fonctionnent sous Windows Pro pour une meilleure sécurité.',cols:2,opts:[
     {i:'🏠',n:'Privé',d:'Maison, école ou études',next:'lap-win-priv'},
-    {i:'💼',n:'Professionnel',d:'Windows Pro, BitLocker, Bureau à distance',next:'lap-win-zak'},
+    {i:'💼',n:'Professionnel',d:'Windows Pro, BitLocker, Bureau à distance',res:'win-pro'},
   ]},
-  'lap-win-priv':{ey:'Étape 4',ti:'À quoi allez-vous principalement l\'utiliser ?',su:'',cols:2,opts:[
-    {i:'🌐',n:'Navigation, email & Office',d:'Usage quotidien, films, traitement de texte',res:'priv-office'},
-    {i:'📚',n:'École ou études',d:'Travaux, présentations, recherche',res:'priv-school'},
-    {i:'📷',n:'Retouche photo',d:'Photoshop, Lightroom, Canva',res:'priv-photo'},
-    {i:'🎬',n:'Retouche photo & vidéo',d:'Premiere Pro, After Effects',res:'priv-video'},
-    {i:'🎮',n:'Gaming',d:'Jouer à des jeux PC',next:'lap-gaming'},
+  'lap-win-priv':{ey:'Étape 4',ti:'Allez-vous aussi jouer ?',su:'',cols:2,opts:[
+    {i:'🌐',n:'Non — navigation, Office ou école',d:'Email, traitement de texte, retouche photo',res:'win-light'},
+    {i:'🎮',n:'Oui — gaming',d:'Jouer à des jeux PC',next:'lap-gaming'},
   ]},
   'lap-gaming':{ey:'Étape 4',ti:'Quelle intensité de jeu ?',su:'Cela détermine la carte graphique.',cols:2,opts:[
-    {i:'🕹️',n:'Casual & e-sports',d:'Fortnite, CoD, Minecraft — full HD',res:'priv-gaming-casual'},
-    {i:'🎮',n:'Intensif & AAA',d:'Flight Simulator, Elden Ring, 4K',res:'priv-gaming-heavy'},
-  ]},
-  'lap-win-zak':{ey:'Étape 4',ti:'Quelles sont vos principales tâches ?',su:'',cols:2,opts:[
-    {i:'📧',n:'Email, Office & comptabilité',d:'Word, Excel, Outlook, Teams',res:'zak-office'},
-    {i:'📷',n:'Design numérique & photo',d:'Photoshop, Illustrator, InDesign',res:'zak-photo'},
-    {i:'🎬',n:'Vidéo & 3D',d:'Premiere Pro, AutoCAD, Solidworks',res:'zak-video-3d'},
+    {i:'🕹️',n:'Casual & e-sports',d:'Fortnite, CoD, Minecraft — full HD',res:'win-gaming-casual'},
+    {i:'🎮',n:'Intensif & AAA',d:'Flight Simulator, Elden Ring, 4K',res:'win-gaming-heavy'},
   ]},
 }
 };
@@ -379,18 +266,16 @@ fr:{
 var TREE=TREES[LANG];
 var RES_L=RES[LANG];
 var S={step:0,history:[],trail:[]};
-// Max depth per starting path — used for progress dots
-var PATH_DEPTH={'lap-win-priv':4,'lap-gaming':4,'lap-win-zak':4,'lap-mac-use':3,'lap-win-ctx':3,'desk-use':2};
+
+var PATH_DEPTH={'lap-win-priv':4,'lap-gaming':4,'lap-mac':3,'lap-win-ctx':3,'desk-use':2};
 function getTotal(){
-  // Find the deepest node in the current history path
   for(var i=S.history.length-1;i>=0;i--){
     if(PATH_DEPTH[S.history[i]]) return PATH_DEPTH[S.history[i]];
   }
-  // Desktop path: max 2, laptop paths: 3-4
   if(S.history.indexOf('desk-use')>-1) return 2;
-  if(S.history.indexOf('lap-mac-use')>-1) return 3;
+  if(S.history.indexOf('lap-mac')>-1) return 3;
   if(S.history.indexOf('lap-win-ctx')>-1) return 4;
-  return 4;
+  return 3;
 }
 
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
@@ -398,6 +283,7 @@ function resize(){setTimeout(function(){window.parent.postMessage({wscHeight:doc
 function showStep(id){document.querySelectorAll('#wk .kb-step').forEach(function(s){s.classList.remove('on');});document.getElementById(id).classList.add('on');resize();}
 function prog(){var el=document.getElementById('kb-prog');el.innerHTML='';var tot=getTotal();for(var i=0;i<tot;i++){var d=document.createElement('div');d.className='kb-pd'+(i<S.step?' done':i===S.step?' act':'');el.appendChild(d);}}
 function updateCrumbs(){var html=S.trail.map(function(l){return'<b>'+esc(l)+'</b>';}).join(' › ');document.querySelectorAll('.kb-cr').forEach(function(el){el.innerHTML=html;});}
+
 function mkBtn(icon,name,desc,onclick){
   var b=document.createElement('button');
   b.className='kb-opt';
@@ -448,8 +334,8 @@ function renderNode(nodeKey,depth,label){
 function showResult(key){
   var r=RES_L[key];
   if(!r) return;
-  var sep = r.url.indexOf('?') > -1 ? '&' : '?';
-  window.top.location.href = r.url + sep + 'utm_source=keuzehulp&utm_medium=widget&utm_campaign=keuzehulp-laptops';
+  var sep=r.url.indexOf('?')>-1?'&':'?';
+  window.top.location.href=r.url+sep+'utm_source=keuzehulp&utm_medium=widget&utm_campaign=keuzehulp-laptops';
 }
 
 function restart(){S.step=0;S.history=[];S.trail=[];track('restart','0','','');prog();updateCrumbs();showStep('ks0');}
@@ -478,12 +364,11 @@ rootNode.opts.forEach(function(opt){
   }));
 });
 
-['kb-bk1','kb-bk2','kb-bk3'].forEach(function(id){document.getElementById(id).innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:4px"><polyline points="15 18 9 12 15 6"></polyline></svg>'+esc(t.back.replace('← ',''));});
-document.getElementById('kb-rst').textContent=t.restart;
+var svgBack='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:4px"><polyline points="15 18 9 12 15 6"></polyline></svg>';
+['kb-bk1','kb-bk2','kb-bk3'].forEach(function(id){document.getElementById(id).innerHTML=svgBack+esc(t.back);});
 document.getElementById('kb-bk1').addEventListener('click',function(){restart();});
 document.getElementById('kb-bk2').addEventListener('click',function(){goBack();});
 document.getElementById('kb-bk3').addEventListener('click',function(){goBack();});
-document.getElementById('kb-rst').addEventListener('click',function(){restart();});
 
 prog();
 track('start','0','','');
