@@ -190,19 +190,19 @@ function filterRows(rows){
     var d=r.domain||'';
     return d.indexOf('demo.theworkspacecompany')===-1;
   });
-  // Filter by tool
+  // Filter by tool — use tool field if available, fall back to result-code detection
   if(TOOL==='laptops'){
     filtered=filtered.filter(function(r){
-      return !r.result||LAPTOP_LABELS[r.result]||r.result.indexOf('mac')>-1||r.result.indexOf('win')>-1||r.result.indexOf('dt-')>-1||r.result.indexOf('priv-')>-1||r.result.indexOf('zak-')>-1;
-    });
-    // Also filter by campaign
-    filtered=filtered.filter(function(r){
-      var d=r.domain||'';
-      return d.indexOf('stoelen')===-1;
+      if(r.tool) return r.tool==='laptops';
+      // legacy: no tool field, detect by result code
+      if(!r.result) return true; // include starts without result
+      return !!(LAPTOP_LABELS[r.result]);
     });
   } else if(TOOL==='stoelen'){
     filtered=filtered.filter(function(r){
-      return !r.result||STOEL_LABELS[r.result];
+      if(r.tool) return r.tool==='stoelen';
+      if(!r.result) return false; // exclude starts without tool field
+      return !!(STOEL_LABELS[r.result]);
     });
   }
   // Filter by period
@@ -229,6 +229,7 @@ function loadData(){
           step:r.stap||r.step,choice:r.keuze||r.choice,
           result:r.resultaat||r.result,lang:r.taal||r.lang,
           domain:r.domein||r.domain,
+          tool:r.tool||'',
         };});
         renderDashboard(filterRows(ALL_ROWS));
       } else {
