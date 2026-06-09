@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Keuzehulp Bureaustoelen — The Workspace Company</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;background:#fff;font-family:'DM Sans','Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a1a1a}
+body{padding:24px 20px 20px}
+.kb-prog{display:flex;gap:6px;margin-bottom:28px;align-items:center}
+.kb-pd{width:8px;height:8px;border-radius:50%;background:#E5E5E5;transition:all .3s cubic-bezier(.4,0,.2,1);flex-shrink:0}
+.kb-pd.done{background:#3FA49C;width:8px}
+.kb-pd.act{background:#3FA49C;width:22px;border-radius:4px}
+.kb-step{display:none}
+.kb-step.on{display:block;animation:kbslide .22s cubic-bezier(.4,0,.2,1)}
+@keyframes kbslide{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
+.kb-ey{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#3FA49C;margin-bottom:6px}
+.kb-ti{font-family:'Poppins',sans-serif;font-size:21px;font-weight:700;color:#111;line-height:1.2;margin-bottom:6px}
+.kb-su{font-size:12px;color:#888;line-height:1.5;margin-bottom:18px}
+.kb-su:empty{margin-bottom:18px}
+.kb-grid{display:grid;gap:10px;margin-bottom:4px}
+.kb-g2{grid-template-columns:1fr 1fr}
+.kb-g3{grid-template-columns:1fr 1fr 1fr}
+@media(max-width:500px){.kb-g2{grid-template-columns:1fr 1fr}.kb-g3{grid-template-columns:1fr}}
+@media(max-width:340px){.kb-g2,.kb-g3{grid-template-columns:1fr}}
+.kb-opt{background:#fff;border:1.5px solid #EBEBEB;border-radius:8px;padding:14px 14px 12px;cursor:pointer;text-align:left;width:100%;font-family:inherit;transition:border-color .15s,box-shadow .15s,transform .15s;display:block;position:relative}
+.kb-opt:hover{border-color:#3FA49C;box-shadow:0 4px 16px rgba(63,164,156,.12);transform:translateY(-2px)}
+.kb-opt:active{transform:translateY(0);border-color:#2F8A82;background:#F6FBFA}
+.kb-opt.kb-selected{border-color:#3FA49C;background:#F0FAF9;animation:kb-pick .25s ease}
+@keyframes kb-pick{0%{transform:scale(1)}40%{transform:scale(.97)}100%{transform:scale(1)}}
+.kb-ico{font-size:22px;margin-bottom:6px;display:block;line-height:1}
+.kb-nm{font-size:13px;font-weight:600;color:#111;margin-bottom:2px;display:block;line-height:1.3}
+.kb-ds{font-size:11px;color:#999;line-height:1.4;display:block}
+.kb-nav{display:flex;align-items:center;gap:10px;margin-top:18px}
+.kb-bk{background:none;border:none;padding:4px 0;font-size:12px;color:#AAA;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px;transition:color .15s}
+.kb-bk:hover{color:#333}
+.kb-cr{font-size:11px;color:#C0C0C0;flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.kb-cr b{color:#888;font-weight:500}
+</style>
+</head>
+<body>
+<div id="wk">
+  <div class="kb-prog" id="kb-prog"></div>
+  <div class="kb-step on" id="ks0">
+    <div class="kb-ey" id="kb-ey0"></div>
+    <div class="kb-ti" id="kb-ti0"></div>
+    <div class="kb-su" id="kb-su0"></div>
+    <div class="kb-grid kb-g2" id="kb-s0"></div>
+  </div>
+  <div class="kb-step" id="ks1">
+    <div class="kb-ey" id="kb-ey1"></div><div class="kb-ti" id="kb-ti1"></div><div class="kb-su" id="kb-su1"></div>
+    <div class="kb-grid" id="kb-s1"></div>
+    <div class="kb-nav"><button class="kb-bk" id="kb-bk1"></button><div class="kb-cr" id="kb-cr1"></div></div>
+  </div>
+  <div class="kb-step" id="ks2">
+    <div class="kb-ey" id="kb-ey2"></div><div class="kb-ti" id="kb-ti2"></div><div class="kb-su" id="kb-su2"></div>
+    <div class="kb-grid" id="kb-s2"></div>
+    <div class="kb-nav"><button class="kb-bk" id="kb-bk2"></button><div class="kb-cr" id="kb-cr2"></div></div>
+  </div>
+</div>
+<script>
+(function(){
+'use strict';
+var params=(function(){var m={};window.location.search.replace(/[?&]([^=&]+)=([^&]*)/g,function(_,k,v){m[k]=decodeURIComponent(v);});return m;})();
+var baseUrl=(params.base||'').replace(/\/$/,'');
+var LANG=(function(){
+  var path=params.base?new URL(params.base).pathname:window.location.pathname;
+  if(path.indexOf('/fr')>-1) return 'fr';
+  if(path.indexOf('/en')>-1) return 'en';
+  if(params.lang&&['nl','en','fr'].indexOf(params.lang)>-1) return params.lang;
+  var bl=(navigator.language||navigator.userLanguage||'nl').toLowerCase().substring(0,2);
+  if(bl==='fr') return 'fr';
+  if(bl==='en') return 'en';
+  return 'nl';
+})();
+
+var TRACKING_URL='https://script.google.com/macros/s/AKfycbx_UmVZsveDAb36OCvzoxM-KBGU2peH-nCeto3cRFbd6hUhZu2KjDGo0_ycJAqKo1s/exec';
+var DOMAIN=params.base||window.location.origin;
+
+function track(event,step,choice,result){
+  if(!TRACKING_URL) return;
+  try{
+    fetch(TRACKING_URL+'?callback=x&event='+encodeURIComponent(event)+'&step='+encodeURIComponent(step)+'&choice='+encodeURIComponent(choice)+'&result='+encodeURIComponent(result||'')+'&lang='+encodeURIComponent(LANG)+'&domain='+encodeURIComponent(DOMAIN),{method:'GET',mode:'no-cors'});
+  }catch(e){}
+}
+
+var T={
+  nl:{back:'Terug'},
+  en:{back:'Back'},
+  fr:{back:'Retour'},
+};
+var t=T[LANG];
+
+// Attribute IDs — verified from Odoo export June 2026
+var A={sync:151,npr:147,en1335:150,lumbar:154,seat:152,arm:149};
+var V={
+  sync_yes:242, sync_no:243,
+  npr_yes:233,
+  en_yes:240,
+  lumbar_yes:248,
+  seat_yes:244,
+  arm_4d:239, arm_3d:238, arm_2d:237,
+};
+
+function u(pairs){
+  var qs=pairs.map(function(x){return'attrib='+x[0]+'-'+x[1];}).join('&');
+  return (baseUrl||'')+'/shop/category/ergonomie-bureaustoelen-1?'+(qs||'');
+}
+function p(a,v){return[a,v];}
+
+var RES={
+nl:{
+  'basis':{
+    ti:'Klassieke bureaustoel',
+    rd:'Ideaal voor occasioneel gebruik of vergaderen. Geen uitgebreide instelmogelijkheden nodig.',
+    url:u([p(A.sync,V.sync_no)])
+  },
+  'actief':{
+    ti:'Dynamische zitoplossing',
+    rd:'Aeris Swopper, LEIV zitbal of Balans knielstoel. Stimuleert beweging en actieve zithouding.',
+    url:(baseUrl||'')+'/shop/category/ergonomie-bureaustoelen-1?attrib=151-243&attrib=154-249&attrib=152-245'
+  },
+  'ergonomisch':{
+    ti:'Ergonomische bureaustoel',
+    rd:'Synchroonmechanisme voor optimale ondersteuning tijdens lange werkdagen. Vitra, Interstuhl of König & Neurath.',
+    url:u([p(A.sync,V.sync_yes)])
+  },
+  'rugklachten':{
+    ti:'Bureaustoel voor rugklachten',
+    rd:'Synchroonmechanisme, verstelbare zitdiepte en lendensteun voor maximale rugondersteuning.',
+    url:u([p(A.sync,V.sync_yes),p(A.lumbar,V.lumbar_yes),p(A.seat,V.seat_yes)])
+  },
+  'nek_schouder':{
+    ti:'Bureaustoel voor nek- en schouderklachten',
+    rd:'4D armleuningen en lendensteun verminderen spanning in nek en schouders. Herman Miller, König & Neurath.',
+    url:u([p(A.sync,V.sync_yes),p(A.lumbar,V.lumbar_yes),p(A.arm,V.arm_4d)])
+  },
+},
+en:{
+  'basis':{
+    ti:'Classic office chair',
+    rd:'Ideal for occasional use or meetings. No extensive adjustments needed.',
+    url:u([p(A.sync,V.sync_no)])
+  },
+  'actief':{
+    ti:'Dynamic seating solution',
+    rd:'Aeris Swopper, LEIV sitting ball or Balans kneeling chair. Encourages movement and active posture.',
+    url:(baseUrl||'')+'/shop/category/ergonomie-bureaustoelen-1?attrib=151-243&attrib=154-249&attrib=152-245'
+  },
+  'ergonomisch':{
+    ti:'Ergonomic office chair',
+    rd:'Synchronous mechanism for optimal support during long working days. Vitra, Interstuhl or König & Neurath.',
+    url:u([p(A.sync,V.sync_yes)])
+  },
+  'rugklachten':{
+    ti:'Office chair for back pain',
+    rd:'Synchronous mechanism, adjustable seat depth and lumbar support for maximum back support.',
+    url:u([p(A.sync,V.sync_yes),p(A.lumbar,V.lumbar_yes),p(A.seat,V.seat_yes)])
+  },
+  'nek_schouder':{
+    ti:'Office chair for neck & shoulder pain',
+    rd:'4D armrests and lumbar support reduce tension in neck and shoulders. Herman Miller, König & Neurath.',
+    url:u([p(A.sync,V.sync_yes),p(A.lumbar,V.lumbar_yes),p(A.arm,V.arm_4d)])
+  },
+},
+fr:{
+  'basis':{
+    ti:'Chaise de bureau classique',
+    rd:'Idéale pour un usage occasionnel ou les réunions. Pas besoin de nombreux réglages.',
+    url:u([p(A.sync,V.sync_no)])
+  },
+  'actief':{
+    ti:'Solution de siège dynamique',
+    rd:'Aeris Swopper, balle LEIV ou chaise à genoux Balans. Encourage le mouvement et la posture active.',
+    url:(baseUrl||'')+'/shop/category/ergonomie-bureaustoelen-1?attrib=151-243&attrib=154-249&attrib=152-245'
+  },
+  'ergonomisch':{
+    ti:'Chaise de bureau ergonomique',
+    rd:'Mécanisme synchrone pour un soutien optimal pendant les longues journées de travail.',
+    url:u([p(A.sync,V.sync_yes)])
+  },
+  'rugklachten':{
+    ti:'Chaise pour douleurs dorsales',
+    rd:'Mécanisme synchrone, profondeur d\'assise réglable et soutien lombaire pour un soutien maximal du dos.',
+    url:u([p(A.sync,V.sync_yes),p(A.lumbar,V.lumbar_yes),p(A.seat,V.seat_yes)])
+  },
+  'nek_schouder':{
+    ti:'Chaise pour douleurs cervicales et épaules',
+    rd:'Accoudoirs 4D et soutien lombaire pour réduire les tensions dans le cou et les épaules.',
+    url:u([p(A.sync,V.sync_yes),p(A.lumbar,V.lumbar_yes),p(A.arm,V.arm_4d)])
+  },
+}
+};
+
+var TREES={
+nl:{
+  root:{ey:'Stap 1',ti:'Hoeveel uur per dag zit je op je stoel?',su:'Het aantal zituren bepaalt hoeveel ergonomische ondersteuning je nodig hebt.',cols:2,opts:[
+    {i:'⏱️',n:'Minder dan 4 uur',d:'Vergaderen, occasioneel gebruik, thuiswerk af en toe',next:'kort-type'},
+    {i:'🖥️',n:'Meer dan 4 uur',d:'Voltijds kantoor of thuiswerk',next:'lang-klachten'},
+  ]},
+  'kort-type':{ey:'Stap 2',ti:'Klassieke bureaustoel of dynamische zitoplossing?',su:'',cols:2,opts:[
+    {i:'🪑',n:'Klassieke bureaustoel',d:'Traditionele stoel met rugleuning',res:'basis'},
+    {i:'🔄',n:'Dynamische zitoplossing',d:'Swopper, zitbal of knielstoel — actief zitten',res:'actief'},
+  ]},
+  'lang-klachten':{ey:'Stap 2',ti:'Heb je fysieke klachten tijdens het werken?',su:'We stemmen onze aanbeveling hierop af.',cols:3,opts:[
+    {i:'✅',n:'Nee, geen specifieke klachten',d:'Gewoon zo comfortabel mogelijk zitten',res:'ergonomisch'},
+    {i:'🦴',n:'Ja, rugklachten',d:'Pijn in onderrug of rug tijdens het zitten',res:'rugklachten'},
+    {i:'💪',n:'Ja, nek- of schouderklachten',d:'Spanning in nek, schouders of armen',res:'nek_schouder'},
+  ]},
+},
+en:{
+  root:{ey:'Step 1',ti:'How many hours a day do you sit in your chair?',su:'The number of hours determines how much ergonomic support you need.',cols:2,opts:[
+    {i:'⏱️',n:'Less than 4 hours',d:'Meetings, occasional use, working from home sometimes',next:'kort-type'},
+    {i:'🖥️',n:'More than 4 hours',d:'Full-time office or home working',next:'lang-klachten'},
+  ]},
+  'kort-type':{ey:'Step 2',ti:'Classic office chair or dynamic seating solution?',su:'',cols:2,opts:[
+    {i:'🪑',n:'Classic office chair',d:'Traditional chair with backrest',res:'basis'},
+    {i:'🔄',n:'Dynamic seating solution',d:'Swopper, sitting ball or kneeling chair — active sitting',res:'actief'},
+  ]},
+  'lang-klachten':{ey:'Step 2',ti:'Do you have physical complaints while working?',su:"We'll tailor our recommendation to this.",cols:3,opts:[
+    {i:'✅',n:'No, no specific complaints',d:'Just sit as comfortably as possible',res:'ergonomisch'},
+    {i:'🦴',n:'Yes, back pain',d:'Pain in lower back or back while sitting',res:'rugklachten'},
+    {i:'💪',n:'Yes, neck or shoulder pain',d:'Tension in neck, shoulders or arms',res:'nek_schouder'},
+  ]},
+},
+fr:{
+  root:{ey:'Étape 1',ti:'Combien d\'heures par jour êtes-vous assis ?',su:'Le nombre d\'heures détermine le niveau de soutien ergonomique dont vous avez besoin.',cols:2,opts:[
+    {i:'⏱️',n:'Moins de 4 heures',d:'Réunions, usage occasionnel, télétravail ponctuel',next:'kort-type'},
+    {i:'🖥️',n:'Plus de 4 heures',d:'Bureau ou télétravail à temps plein',next:'lang-klachten'},
+  ]},
+  'kort-type':{ey:'Étape 2',ti:'Chaise classique ou solution de siège dynamique ?',su:'',cols:2,opts:[
+    {i:'🪑',n:'Chaise de bureau classique',d:'Chaise traditionnelle avec dossier',res:'basis'},
+    {i:'🔄',n:'Solution de siège dynamique',d:'Swopper, balle assise ou chaise à genoux — siège actif',res:'actief'},
+  ]},
+  'lang-klachten':{ey:'Étape 2',ti:'Avez-vous des douleurs physiques en travaillant ?',su:'Nous adapterons notre recommandation en conséquence.',cols:3,opts:[
+    {i:'✅',n:'Non, pas de plaintes spécifiques',d:'Juste s\'asseoir aussi confortablement que possible',res:'ergonomisch'},
+    {i:'🦴',n:'Oui, douleurs dorsales',d:'Douleur dans le bas du dos ou le dos en position assise',res:'rugklachten'},
+    {i:'💪',n:'Oui, douleurs cervicales ou aux épaules',d:'Tensions dans le cou, les épaules ou les bras',res:'nek_schouder'},
+  ]},
+}
+};
+
+var TREE=TREES[LANG];
+var RES_L=RES[LANG];
+var S={step:0,history:[],trail:[]};
+
+var PATH_DEPTH={'kort-type':2,'lang-klachten':2};
+function getTotal(){
+  for(var i=S.history.length-1;i>=0;i--){
+    if(PATH_DEPTH[S.history[i]]) return PATH_DEPTH[S.history[i]];
+  }
+  return 2;
+}
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function resize(){setTimeout(function(){window.parent.postMessage({wscHeight:document.getElementById('wk').scrollHeight+40},'*');},60);}
+function showStep(id){document.querySelectorAll('#wk .kb-step').forEach(function(s){s.classList.remove('on');});document.getElementById(id).classList.add('on');resize();}
+function prog(){var el=document.getElementById('kb-prog');el.innerHTML='';var tot=getTotal();for(var i=0;i<tot;i++){var d=document.createElement('div');d.className='kb-pd'+(i<S.step?' done':i===S.step?' act':'');el.appendChild(d);}}
+function updateCrumbs(){var html=S.trail.map(function(l){return'<b>'+esc(l)+'</b>';}).join(' › ');document.querySelectorAll('.kb-cr').forEach(function(el){el.innerHTML=html;});}
+
+function mkBtn(icon,name,desc,onclick){
+  var b=document.createElement('button');
+  b.className='kb-opt';
+  b.innerHTML='<span class="kb-ico">'+icon+'</span><span class="kb-nm">'+esc(name)+'</span>'+(desc?'<span class="kb-ds">'+esc(desc)+'</span>':'');
+  b.addEventListener('click',function(){
+    b.classList.add('kb-selected');
+    setTimeout(function(){onclick();},160);
+  });
+  return b;
+}
+
+var STEP_IDS=[null,'ks1','ks2'];
+var GRID_IDS=[null,'kb-s1','kb-s2'];
+var EY_IDS=[null,'kb-ey1','kb-ey2'];
+var TI_IDS=[null,'kb-ti1','kb-ti2'];
+var SU_IDS=[null,'kb-su1','kb-su2'];
+
+function renderNode(nodeKey,depth,label){
+  var node=TREE[nodeKey];
+  if(!node) return;
+  S.history.push(nodeKey);
+  if(label) S.trail.push(label);
+  S.step=depth;
+  document.getElementById(EY_IDS[depth]).textContent=node.ey||'';
+  document.getElementById(TI_IDS[depth]).textContent=node.ti||'';
+  document.getElementById(SU_IDS[depth]).textContent=node.su||'';
+  var grid=document.getElementById(GRID_IDS[depth]);
+  grid.className='kb-grid kb-g'+(node.cols||2);
+  grid.innerHTML='';
+  node.opts.forEach(function(opt){
+    (function(o){
+      grid.appendChild(mkBtn(o.i,o.n,o.d,function(){
+        if(o.res){
+          S.trail.push(o.n);
+          track('result',String(depth),o.n,o.res);
+          showResult(o.res);
+        } else if(o.next){
+          track('choice',String(depth),o.n,'');
+          renderNode(o.next,depth+1,o.n);
+        }
+        updateCrumbs();
+      }));
+    })(opt);
+  });
+  prog();updateCrumbs();showStep(STEP_IDS[depth]);
+}
+
+function showResult(key){
+  var r=RES_L[key];
+  if(!r) return;
+  var sep=r.url.indexOf('?')>-1?'&':'?';
+  window.top.location.href=r.url+sep+'utm_source=keuzehulp&utm_medium=widget&utm_campaign=keuzehulp-stoelen';
+}
+
+function restart(){S.step=0;S.history=[];S.trail=[];track('restart','0','','');prog();updateCrumbs();showStep('ks0');}
+function goBack(){
+  if(S.history.length===0){restart();return;}
+  S.history.pop();S.trail.pop();
+  var depth=S.history.length;
+  if(depth===0){restart();return;}
+  var prevKey=S.history[depth-1];
+  S.history.pop();
+  if(S.trail.length>0) S.trail.pop();
+  renderNode(prevKey,depth,null);
+}
+
+var rootNode=TREE.root;
+document.getElementById('kb-ey0').textContent=rootNode.ey||'';
+document.getElementById('kb-ti0').textContent=rootNode.ti||'';
+document.getElementById('kb-su0').textContent=rootNode.su||'';
+var g0=document.getElementById('kb-s0');
+rootNode.opts.forEach(function(opt){
+  g0.appendChild(mkBtn(opt.i,opt.n,opt.d,function(){
+    S.history=[];S.trail=[opt.n];
+    renderNode(opt.next,1,null);
+    updateCrumbs();
+  }));
+});
+
+var svgBack='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:4px"><polyline points="15 18 9 12 15 6"></polyline></svg>';
+['kb-bk1','kb-bk2'].forEach(function(id){document.getElementById(id).innerHTML=svgBack+esc(t.back);});
+document.getElementById('kb-bk1').addEventListener('click',function(){restart();});
+document.getElementById('kb-bk2').addEventListener('click',function(){goBack();});
+
+prog();
+track('start','0','','');
+window.addEventListener('load',function(){resize();});
+})();
+</script>
+</body>
+</html>
