@@ -83,7 +83,7 @@ var DOMAIN=params.base||window.location.origin;
 function track(event,step,choice,result){
   if(!TRACKING_URL) return;
   try{
-    fetch(TRACKING_URL+'?callback=x&event='+encodeURIComponent(event)+'&step='+encodeURIComponent(step)+'&choice='+encodeURIComponent(choice)+'&result='+encodeURIComponent(result||'')+'&lang='+encodeURIComponent(LANG)+'&domain='+encodeURIComponent(DOMAIN),{method:'GET',mode:'no-cors'});
+    fetch(TRACKING_URL+'?callback=x&event='+encodeURIComponent(event)+'&step='+encodeURIComponent(step)+'&choice='+encodeURIComponent(choice)+'&result='+encodeURIComponent(result||'')+'&lang='+encodeURIComponent(LANG)+'&domain='+encodeURIComponent(DOMAIN)+'&tool=stoelen',{method:'GET',mode:'no-cors'});
   }catch(e){}
 }
 
